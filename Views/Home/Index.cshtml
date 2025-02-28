@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Personel Kayıt Sistemine Hoş Geldiniz</h1>
+    <p class="mt-4">
+        <a class="btn btn-primary btn-lg" asp-controller="Personel" asp-action="Index">
+            Personel Listesini Görüntüle
+        </a>
+    </p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Personel Ekle</h5>
+                <p class="card-text">Yeni personel kaydı oluşturmak için tıklayın.</p>
+                <a asp-controller="Personel" asp-action="Create" class="btn btn-success">Personel Ekle</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Personel Listesi</h5>
+                <p class="card-text">Tüm personel kayıtlarını görüntüleyin ve yönetin.</p>
+                <a asp-controller="Personel" asp-action="Index" class="btn btn-info">Listeyi Görüntüle</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Sistem Özellikleri</h5>
+                <ul class="list-unstyled">
+                    <li>✓ Personel bilgilerini kaydetme</li>
+                    <li>✓ Personel bilgilerini düzenleme</li>
+                    <li>✓ Personel kaydı silme</li>
+                    <li>✓ Detaylı personel listesi</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

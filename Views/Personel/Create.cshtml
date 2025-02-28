@@ -1,0 +1,108 @@
+@model PersonelKayit.Models.Personel
+
+@{
+    ViewData["Title"] = "Yeni Personel Ekle";
+}
+
+<h1>Yeni Personel Ekle</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Ad" class="control-label"></label>
+                <input asp-for="Ad" class="form-control" />
+                <span asp-validation-for="Ad" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Soyad" class="control-label"></label>
+                <input asp-for="Soyad" class="form-control" />
+                <span asp-validation-for="Soyad" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="DogumTarihi" class="control-label"></label>
+                <input asp-for="DogumTarihi" class="form-control" type="date" />
+                <span asp-validation-for="DogumTarihi" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Cinsiyet" class="control-label"></label>
+                <select asp-for="Cinsiyet" class="form-control">
+                    <option value="">Seçiniz</option>
+                    <option value="Erkek">Erkek</option>
+                    <option value="Kadın">Kadın</option>
+                </select>
+                <span asp-validation-for="Cinsiyet" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Ulke" class="control-label"></label>
+                <select asp-for="Ulke" class="form-control" id="ulkeSelect">
+                    <option value="">Seçiniz</option>
+                    <option value="Türkiye">Türkiye</option>
+                    <option value="Almanya">Almanya</option>
+                    <option value="İngiltere">İngiltere</option>
+                    <option value="Fransa">Fransa</option>
+                    <option value="İtalya">İtalya</option>
+                </select>
+                <span asp-validation-for="Ulke" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Sehir" class="control-label"></label>
+                <select asp-for="Sehir" class="form-control" id="sehirSelect" disabled>
+                    <option value="">Önce ülke seçiniz</option>
+                </select>
+                <span asp-validation-for="Sehir" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Aciklama" class="control-label"></label>
+                <textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Aciklama" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mt-3">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            const sehirler = {
+                'Türkiye': ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya'],
+                'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
+                'İngiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
+                'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
+                'İtalya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
+            };
+
+            $('#ulkeSelect').change(function() {
+                const selectedUlke = $(this).val();
+                const sehirSelect = $('#sehirSelect');
+                sehirSelect.empty();
+                
+                if (selectedUlke) {
+                    sehirSelect.prop('disabled', false);
+                    sehirSelect.append('<option value="">Şehir seçiniz</option>');
+                    
+                    sehirler[selectedUlke].forEach(function(sehir) {
+                        sehirSelect.append(`<option value="${sehir}">${sehir}</option>`);
+                    });
+                } else {
+                    sehirSelect.prop('disabled', true);
+                    sehirSelect.append('<option value="">Önce ülke seçiniz</option>');
+                }
+            });
+        });
+    </script>
+}
