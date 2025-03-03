@@ -1,0 +1,64 @@
+@model PersonelKayit.Models.Lokasyon
+
+@{
+    ViewData["Title"] = "Lokasyon Sil";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="display-4">Lokasyon Silme</h1>
+    </div>
+
+    <div class="alert alert-danger mb-4">
+        <h4 class="alert-heading">
+            <i class="bi bi-exclamation-triangle-fill"></i> Dikkat!
+        </h4>
+        <p class="mb-0">Bu lokasyonu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.ParentId)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.ParentId)
+                </dd>
+            </dl>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Listeye Dön
+                </a>
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i> Sil
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

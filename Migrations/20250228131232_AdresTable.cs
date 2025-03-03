@@ -5,20 +5,20 @@
 namespace PersonelKayit.Migrations
 {
     /// <inheritdoc />
-    public partial class LokasyonTable : Migration
+    public partial class AdresTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "LokasyonId",
-                table: "Personeller",
+                name: "AdresId",
+                table: "Lokasyonlar",
                 type: "int",
                 nullable: true,
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "Lokasyonlar",
+                name: "Adresler",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -28,19 +28,19 @@ namespace PersonelKayit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lokasyonlar", x => x.Id);
+                    table.PrimaryKey("PK_Adresler", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personeller_LokasyonId",
-                table: "Personeller",
-                column: "LokasyonId");
+                name: "IX_Lokasyonlar_AdresId",
+                table: "Lokasyonlar",
+                column: "AdresId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Personeller_Lokasyonlar_LokasyonId",
-                table: "Personeller",
-                column: "LokasyonId",
-                principalTable: "Lokasyonlar",
+                name: "FK_Lokasyonlar_Adresler_AdresId",
+                table: "Lokasyonlar",
+                column: "AdresId",
+                principalTable: "Adresler",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -49,19 +49,19 @@ namespace PersonelKayit.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Personeller_Lokasyonlar_LokasyonId",
-                table: "Personeller");
+                name: "FK_Lokasyonlar_Adresler_AdresId",
+                table: "Lokasyonlar");
 
             migrationBuilder.DropTable(
-                name: "Lokasyonlar");
+                name: "Adresler");
 
             migrationBuilder.DropIndex(
-                name: "IX_Personeller_LokasyonId",
-                table: "Personeller");
+                name: "IX_Lokasyonlar_AdresId",
+                table: "Lokasyonlar");
 
             migrationBuilder.DropColumn(
-                name: "LokasyonId",
-                table: "Personeller");
+                name: "AdresId",
+                table: "Lokasyonlar");
         }
     }
 }

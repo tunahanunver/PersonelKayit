@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonelKayit.Models;
 
@@ -11,9 +12,11 @@ using PersonelKayit.Models;
 namespace PersonelKayit.Migrations
 {
     [DbContext(typeof(PersonelDbContext))]
-    partial class PersonelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228141815_PersonelIlceEklendi")]
+    partial class PersonelIlceEklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,7 @@ namespace PersonelKayit.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LokasyonId")
+                    b.Property<int>("LokasyonId")
                         .HasColumnType("int");
 
                     b.Property<string>("Sehir")
@@ -101,7 +104,9 @@ namespace PersonelKayit.Migrations
                 {
                     b.HasOne("PersonelKayit.Models.Lokasyon", "Lokasyon")
                         .WithMany("Personels")
-                        .HasForeignKey("LokasyonId");
+                        .HasForeignKey("LokasyonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lokasyon");
                 });

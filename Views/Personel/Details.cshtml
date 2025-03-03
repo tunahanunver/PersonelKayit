@@ -1,19 +1,20 @@
 @model PersonelKayit.Models.Personel
 
 @{
-    ViewData["Title"] = "Personel Sil";
+    ViewData["Title"] = "Personel Detayları";
 }
 
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="display-4">Personel Silme</h1>
-    </div>
-
-    <div class="alert alert-danger mb-4">
-        <h4 class="alert-heading">
-            <i class="bi bi-exclamation-triangle-fill"></i> Dikkat!
-        </h4>
-        <p class="mb-0">Bu personel kaydını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+        <h1 class="display-4">Personel Detayları</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil-fill"></i> Düzenle
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Listeye Dön
+            </a>
+        </div>
     </div>
 
     <div class="row">
@@ -45,24 +46,8 @@
                         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Aciklama)</dt>
                         <dd class="col-sm-9">@Html.DisplayFor(model => model.Aciklama)</dd>
                     </dl>
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a asp-action="Index" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Listeye Dön
-                        </a>
-                        <form asp-action="Delete">
-                            <input type="hidden" asp-for="Id" />
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-trash-fill"></i> Sil
-                            </button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-@section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-}
+</div> 

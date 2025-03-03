@@ -35,12 +35,16 @@ namespace PersonelKayit.Models
         [Display(Name = "Şehir")]
         public string? Sehir { get; set; }
 
+        [Required(ErrorMessage = "İlçe seçimi zorunludur")]
+        [Display(Name = "İlçe")]
+        public string? Ilce { get; set; }
+
         [Display(Name = "Açıklama")]
         [DataType(DataType.MultilineText)]
         [StringLength(500, ErrorMessage = "Açıklama en fazla 500 karakter olabilir")]
         public string? Aciklama { get; set; }
 
-        public int LokasyonId { get; set; }
+        public int? LokasyonId { get; set; }
         public Lokasyon? Lokasyon { get; set; }
     }
 }

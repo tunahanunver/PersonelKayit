@@ -4,74 +4,100 @@
     ViewData["Title"] = "Personel Düzenle";
 }
 
-<h1>Personel Düzenle</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="display-4">Personel Düzenle</h1>
+    </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            
-            <div class="form-group mb-3">
-                <label asp-for="Ad" class="control-label"></label>
-                <input asp-for="Ad" class="form-control" />
-                <span asp-validation-for="Ad" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="Soyad" class="control-label"></label>
-                <input asp-for="Soyad" class="form-control" />
-                <span asp-validation-for="Soyad" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="DogumTarihi" class="control-label"></label>
-                <input asp-for="DogumTarihi" class="form-control" type="date" />
-                <span asp-validation-for="DogumTarihi" class="text-danger"></span>
-            </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Ad" class="form-label"></label>
+                                <input asp-for="Ad" class="form-control" />
+                                <span asp-validation-for="Ad" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Soyad" class="form-label"></label>
+                                <input asp-for="Soyad" class="form-control" />
+                                <span asp-validation-for="Soyad" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Cinsiyet" class="control-label"></label>
-                <select asp-for="Cinsiyet" class="form-control">
-                    <option value="">Seçiniz</option>
-                    <option value="Erkek">Erkek</option>
-                    <option value="Kadın">Kadın</option>
-                </select>
-                <span asp-validation-for="Cinsiyet" class="text-danger"></span>
-            </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DogumTarihi" class="form-label"></label>
+                                <input asp-for="DogumTarihi" class="form-control" type="date" />
+                                <span asp-validation-for="DogumTarihi" class="text-danger"></span>
+                            </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Ulke" class="control-label"></label>
-                <select asp-for="Ulke" class="form-control" id="ulkeSelect">
-                    <option value="">Seçiniz</option>
-                    <option value="Türkiye">Türkiye</option>
-                    <option value="Almanya">Almanya</option>
-                    <option value="İngiltere">İngiltere</option>
-                    <option value="Fransa">Fransa</option>
-                    <option value="İtalya">İtalya</option>
-                </select>
-                <span asp-validation-for="Ulke" class="text-danger"></span>
-            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Cinsiyet" class="form-label"></label>
+                                <select asp-for="Cinsiyet" class="form-select">
+                                    <option value="">Seçiniz</option>
+                                    <option value="Erkek">Erkek</option>
+                                    <option value="Kadın">Kadın</option>
+                                </select>
+                                <span asp-validation-for="Cinsiyet" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Sehir" class="control-label"></label>
-                <select asp-for="Sehir" class="form-control" id="sehirSelect">
-                    <option value="">Önce ülke seçiniz</option>
-                </select>
-                <span asp-validation-for="Sehir" class="text-danger"></span>
-            </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Ulke" class="form-label"></label>
+                                <select asp-for="Ulke" class="form-select" id="ulkeSelect">
+                                    <option value="">Seçiniz</option>
+                                    <option value="Türkiye">Türkiye</option>
+                                    <option value="Almanya">Almanya</option>
+                                    <option value="İngiltere">İngiltere</option>
+                                    <option value="Fransa">Fransa</option>
+                                    <option value="İtalya">İtalya</option>
+                                </select>
+                                <span asp-validation-for="Ulke" class="text-danger"></span>
+                            </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Aciklama" class="control-label"></label>
-                <textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="Aciklama" class="text-danger"></span>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Sehir" class="form-label"></label>
+                                <select asp-for="Sehir" class="form-select" id="sehirSelect">
+                                    <option value="">Önce ülke seçiniz</option>
+                                </select>
+                                <span asp-validation-for="Sehir" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Ilce" class="form-label"></label>
+                                <select asp-for="Ilce" class="form-select" id="ilceSelect">
+                                    <option value="">Önce şehir seçiniz</option>
+                                </select>
+                                <span asp-validation-for="Ilce" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Aciklama" class="form-label"></label>
+                            <textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Aciklama" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Listeye Dön
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            
-            <div class="form-group mt-3">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -87,11 +113,42 @@
                 'İtalya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
             };
 
+            const ilceler = {
+                'İstanbul': ['Üsküdar', 'Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu'],
+                'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
+                'İzmir': ['Konak', 'Karşıyaka', 'Bornova', 'Buca', 'Çiğli'],
+                'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya'],
+                'Antalya': ['Muratpaşa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
+                'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
+                'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
+                'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
+                'Köln': ['Innenstadt', 'Rodenkirchen', 'Lindenthal', 'Ehrenfeld', 'Nippes'],
+                'Frankfurt': ['Innenstadt', 'Bockenheim', 'Sachsenhausen', 'Nordend', 'Westend'],
+                'Londra': ['Westminster', 'Camden', 'Greenwich', 'Hackney', 'Islington'],
+                'Manchester': ['City Centre', 'Ancoats', 'Chorlton', 'Didsbury', 'Fallowfield'],
+                'Birmingham': ['City Centre', 'Edgbaston', 'Moseley', 'Harborne', 'Selly Oak'],
+                'Liverpool': ['City Centre', 'Allerton', 'Aigburth', 'Childwall', 'Woolton'],
+                'Leeds': ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Horsforth'],
+                'Paris': ['Le Marais', 'Montmartre', 'Saint-Germain', 'Champs-Élysées', 'Bastille'],
+                'Marsilya': ['Vieux-Port', 'Le Panier', 'Noailles', 'Endoume', 'Bompard'],
+                'Lyon': ['Presqu\'île', 'Croix-Rousse', 'Guillotière', 'Vieux Lyon', 'Fourvière'],
+                'Toulouse': ['Capitole', 'Saint-Cyprien', 'Carmes', 'Saint-Michel', 'Minimes'],
+                'Nice': ['Vieux Nice', 'Cimiez', 'Gambetta', 'Liberation', 'Port'],
+                'Roma': ['Centro Storico', 'Trastevere', 'Testaccio', 'Prati', 'Monti'],
+                'Milano': ['Duomo', 'Navigli', 'Brera', 'Isola', 'Porta Romana'],
+                'Napoli': ['Centro Storico', 'Chiaia', 'Vomero', 'Posillipo', 'San Carlo'],
+                'Torino': ['Centro', 'San Salvario', 'Crocetta', 'Aurora', 'Lingotto'],
+                'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
+            };
+
             const ulkeSelect = $('#ulkeSelect');
             const sehirSelect = $('#sehirSelect');
+            const ilceSelect = $('#ilceSelect');
 
             function populateSehirler(ulke, selectedSehir = '') {
                 sehirSelect.empty();
+                ilceSelect.empty().prop('disabled', true)
+                    .html('<option value="">Önce şehir seçiniz</option>');
                 
                 if (ulke && sehirler[ulke]) {
                     sehirSelect.prop('disabled', false);
@@ -108,15 +165,41 @@
                 }
             }
 
+            function populateIlceler(sehir, selectedIlce = '') {
+                ilceSelect.empty();
+                
+                if (sehir && ilceler[sehir]) {
+                    ilceSelect.prop('disabled', false);
+                    
+                    const options = ['<option value="">İlçe seçiniz</option>'];
+                    ilceler[sehir].forEach(ilce => {
+                        options.push(`<option value="${ilce}" ${ilce === selectedIlce ? 'selected' : ''}>${ilce}</option>`);
+                    });
+                    
+                    ilceSelect.html(options.join(''));
+                } else {
+                    ilceSelect.prop('disabled', true)
+                        .html('<option value="">Önce şehir seçiniz</option>');
+                }
+            }
+
             const selectedUlke = ulkeSelect.val();
             const selectedSehir = '@Html.Raw(Json.Serialize(Model.Sehir))';
+            const selectedIlce = '@Html.Raw(Json.Serialize(Model.Ilce))';
             
             if (selectedUlke) {
                 populateSehirler(selectedUlke, selectedSehir);
+                if (selectedSehir) {
+                    populateIlceler(selectedSehir, selectedIlce);
+                }
             }
 
             ulkeSelect.on('change', function() {
                 populateSehirler(this.value);
+            });
+
+            sehirSelect.on('change', function() {
+                populateIlceler(this.value);
             });
         });
     </script>

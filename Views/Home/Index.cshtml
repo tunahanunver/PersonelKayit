@@ -2,44 +2,37 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Personel Kayıt Sistemine Hoş Geldiniz</h1>
-    <p class="mt-4">
-        <a class="btn btn-primary btn-lg" asp-controller="Personel" asp-action="Index">
-            Personel Listesini Görüntüle
-        </a>
-    </p>
+<div class="text-center mb-4">
+    <h1 class="display-4">Personel Kayıt Sistemi</h1>
+    <p class="lead">Personel ve lokasyon yönetimi için geliştirilmiş web uygulaması.</p>
 </div>
 
-<div class="row mt-5">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Personel Ekle</h5>
-                <p class="card-text">Yeni personel kaydı oluşturmak için tıklayın.</p>
-                <a asp-controller="Personel" asp-action="Create" class="btn btn-success">Personel Ekle</a>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Personel İşlemleri</h5>
+                <p class="card-text">Personel kayıt, güncelleme ve silme işlemlerini gerçekleştirebilirsiniz.</p>
+                <a asp-controller="Personel" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Personel Listesi
+                </a>
+                <a asp-controller="Personel" asp-action="Create" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Yeni Personel
+                </a>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Personel Listesi</h5>
-                <p class="card-text">Tüm personel kayıtlarını görüntüleyin ve yönetin.</p>
-                <a asp-controller="Personel" asp-action="Index" class="btn btn-info">Listeyi Görüntüle</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Sistem Özellikleri</h5>
-                <ul class="list-unstyled">
-                    <li>✓ Personel bilgilerini kaydetme</li>
-                    <li>✓ Personel bilgilerini düzenleme</li>
-                    <li>✓ Personel kaydı silme</li>
-                    <li>✓ Detaylı personel listesi</li>
-                </ul>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-geo-alt-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Lokasyon Yönetimi</h5>
+                <p class="card-text">Ülke, şehir ve ilçe bilgilerini görüntüleyip yönetebilirsiniz.</p>
+                <a asp-controller="Lokasyon" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Lokasyonları Görüntüle
+                </a>
             </div>
         </div>
     </div>

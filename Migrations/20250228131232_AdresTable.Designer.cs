@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonelKayit.Models;
 
@@ -11,9 +12,11 @@ using PersonelKayit.Models;
 namespace PersonelKayit.Migrations
 {
     [DbContext(typeof(PersonelDbContext))]
-    partial class PersonelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228131232_AdresTable")]
+    partial class AdresTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace PersonelKayit.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PersonelKayit.Models.Lokasyon", b =>
+            modelBuilder.Entity("PersonelKayit.Models.Adres", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,10 +41,33 @@ namespace PersonelKayit.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("ParentId")
+                    b.HasKey("Id");
+
+                    b.ToTable("Adresler");
+                });
+
+            modelBuilder.Entity("PersonelKayit.Models.Lokasyon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdresId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AdresId");
 
                     b.ToTable("Lokasyonlar");
                 });
@@ -70,11 +96,7 @@ namespace PersonelKayit.Migrations
                     b.Property<DateTime>("DogumTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Ilce")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("LokasyonId")
+                    b.Property<int>("LokasyonId")
                         .HasColumnType("int");
 
                     b.Property<string>("Sehir")
@@ -97,13 +119,31 @@ namespace PersonelKayit.Migrations
                     b.ToTable("Personeller");
                 });
 
+            modelBuilder.Entity("PersonelKayit.Models.Lokasyon", b =>
+                {
+                    b.HasOne("PersonelKayit.Models.Adres", "Adres")
+                        .WithMany("Lokasyons")
+                        .HasForeignKey("AdresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adres");
+                });
+
             modelBuilder.Entity("PersonelKayit.Models.Personel", b =>
                 {
                     b.HasOne("PersonelKayit.Models.Lokasyon", "Lokasyon")
                         .WithMany("Personels")
-                        .HasForeignKey("LokasyonId");
+                        .HasForeignKey("LokasyonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lokasyon");
+                });
+
+            modelBuilder.Entity("PersonelKayit.Models.Adres", b =>
+                {
+                    b.Navigation("Lokasyons");
                 });
 
             modelBuilder.Entity("PersonelKayit.Models.Lokasyon", b =>
