@@ -4,14 +4,17 @@
     ViewData["Title"] = "Lokasyon Sil";
 }
 
-<div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="display-4">Lokasyon Silme</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Lokasyon Silme</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
     </div>
 
     <div class="alert alert-danger mb-4">
         <h4 class="alert-heading">
-            <i class="bi bi-exclamation-triangle-fill"></i> Dikkat!
+            <i class="bi bi-exclamation-triangle"></i> Dikkat!
         </h4>
         <p class="mb-0">Bu lokasyonu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
     </div>
@@ -48,17 +51,18 @@
                 </dd>
             </dl>
 
-            <div class="d-flex justify-content-between mt-4">
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Listeye Dön
-                </a>
+            <div class="d-flex justify-content-end mt-4">
                 <form asp-action="Delete">
                     <input type="hidden" asp-for="Id" />
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash-fill"></i> Sil
+                        <i class="bi bi-trash"></i> Sil
                     </button>
                 </form>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+} 

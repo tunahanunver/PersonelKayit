@@ -4,16 +4,19 @@
     ViewData["Title"] = "Yeni Personel Ekle";
 }
 
-<div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="display-4">Yeni Personel Ekle</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Yeni Personel Ekle</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
     </div>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form asp-action="Create">
+                    <form asp-action="Create" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                         
                         <div class="row">
@@ -50,8 +53,8 @@
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Ulke" class="form-label"></label>
-                                <select asp-for="Ulke" class="form-select" id="ulkeSelect">
+                                <label class="form-label">Ülke</label>
+                                <select name="ulke" class="form-select" id="ulkeSelect" required>
                                     <option value="">Seçiniz</option>
                                     <option value="Türkiye">Türkiye</option>
                                     <option value="Almanya">Almanya</option>
@@ -59,24 +62,27 @@
                                     <option value="Fransa">Fransa</option>
                                     <option value="İtalya">İtalya</option>
                                 </select>
-                                <span asp-validation-for="Ulke" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Sehir" class="form-label"></label>
-                                <select asp-for="Sehir" class="form-select" id="sehirSelect" disabled>
+                                <label class="form-label">Şehir</label>
+                                <select name="sehir" class="form-select" id="sehirSelect" disabled required>
                                     <option value="">Önce ülke seçiniz</option>
                                 </select>
-                                <span asp-validation-for="Sehir" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Ilce" class="form-label"></label>
-                                <select asp-for="Ilce" class="form-select" id="ilceSelect" disabled>
+                                <label class="form-label">İlçe</label>
+                                <select name="ilce" class="form-select" id="ilceSelect" disabled required>
                                     <option value="">Önce şehir seçiniz</option>
                                 </select>
-                                <span asp-validation-for="Ilce" class="text-danger"></span>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label"></label>
+                            <input asp-for="Image" class="form-control" type="file" name="Image" />
+                            <span asp-validation-for="Image" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -85,11 +91,8 @@
                             <span asp-validation-for="Aciklama" class="text-danger"></span>
                         </div>
                         
-                        <div class="d-flex justify-content-between mt-4">
-                            <a asp-action="Index" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Listeye Dön
-                            </a>
-                            <button type="submit" class="btn btn-success">
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle"></i> Kaydet
                             </button>
                         </div>
@@ -183,4 +186,8 @@
             });
         });
     </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }

@@ -12,8 +12,8 @@ using PersonelKayit.Models;
 namespace PersonelKayit.Migrations
 {
     [DbContext(typeof(PersonelDbContext))]
-    [Migration("20250228141815_PersonelIlceEklendi")]
-    partial class PersonelIlceEklendi
+    [Migration("20250305074449_InitialDatabase")]
+    partial class InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,25 +73,13 @@ namespace PersonelKayit.Migrations
                     b.Property<DateTime>("DogumTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Ilce")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LokasyonId")
+                    b.Property<int?>("LokasyonId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Sehir")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Soyad")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Ulke")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -104,9 +92,7 @@ namespace PersonelKayit.Migrations
                 {
                     b.HasOne("PersonelKayit.Models.Lokasyon", "Lokasyon")
                         .WithMany("Personels")
-                        .HasForeignKey("LokasyonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LokasyonId");
 
                     b.Navigation("Lokasyon");
                 });

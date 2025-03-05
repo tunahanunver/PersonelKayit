@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Orleans.Runtime;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
@@ -16,11 +18,42 @@ namespace PersonelKayit.Controllers
         // GET: Personel
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Personeller
-                .Include(p => p.Lokasyon)
-                .AsNoTracking()
-                .OrderBy(p => p.Id)
-                .ToListAsync());
+            try
+            {
+                // Tüm personelleri ve lokasyon bilgilerini tek sorguda çekiyoruz
+                var personeller = await _context.Personeller
+                    .Include(p => p.Lokasyon)
+                    .AsNoTracking() // Performans için tracking'i kapatıyoruz
+                    .OrderBy(p => p.Id) // ID'ye göre sıralama
+                    .ToListAsync();
+
+                // Tüm lokasyonları tek sorguda çekiyoruz
+                var lokasyonlar = await _context.Lokasyonlar
+                    .AsNoTracking() // Performans için tracking'i kapatıyoruz
+                    .ToDictionaryAsync(l => l.Id, l => l);
+
+                // Her personel için ülke ve şehir bilgilerini bellekten alıyoruz
+                foreach (var personel in personeller)
+                {
+                    if (personel.Lokasyon != null)
+                    {
+                        // İlçenin bağlı olduğu şehri bellekten buluyoruz
+                        if (lokasyonlar.TryGetValue(personel.Lokasyon.ParentId, out var sehir))
+                        {
+                            // Şehrin bağlı olduğu ülkeyi bellekten buluyoruz
+                            if (lokasyonlar.TryGetValue(sehir.ParentId, out var ulke))
+                            {
+                                personel.SetLocationInfo(ulke.Name, sehir.Name);
+                            }
+                        }
+                    }
+                }
+                return View(personeller);
+            }
+            catch (Exception ex)
+            {
+                return View(new List<Personel>());
+            }
         }
 
         // GET: Personel/Details/5
@@ -33,12 +66,28 @@ namespace PersonelKayit.Controllers
 
             var personel = await _context.Personeller
                 .Include(p => p.Lokasyon)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (personel == null)
             {
                 return NotFound();
+            }
+
+            if (personel.Lokasyon != null)
+            {
+                // İlçenin şehrini bul
+                var sehir = await _context.Lokasyonlar.FindAsync(personel.Lokasyon.ParentId);
+                if (sehir != null)
+                {
+                    // Şehrin ülkesini bul
+                    var ulke = await _context.Lokasyonlar.FindAsync(sehir.ParentId);
+                    if (ulke != null)
+                    {
+                        ViewBag.SecilenUlke = ulke.Name;
+                        ViewBag.SecilenSehir = sehir.Name;
+                        ViewBag.SecilenIlce = personel.Lokasyon.Name;
+                    }
+                }
             }
 
             return View(personel);
@@ -53,92 +102,111 @@ namespace PersonelKayit.Controllers
         // POST: Personel/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Ad,Soyad,DogumTarihi,Cinsiyet,Ulke,Sehir,Ilce,Aciklama")] Personel personel)
+        public async Task<IActionResult> Create([Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama")] Personel personel, IFormFile? Image, string ulke, string sehir, string ilce)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    // Önce ülke lokasyonunu kontrol et veya oluştur
+                    // Ülke kontrolü
                     var ulkeLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Ulke && l.ParentId == 0);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == ulke && l.ParentId == 0);
+
                     if (ulkeLokasyon == null)
                     {
-                        ulkeLokasyon = new Lokasyon
-                        {
-                            Name = personel.Ulke,
-                            ParentId = 0 // Ülkeler için ParentId = 0
-                        };
+                        ulkeLokasyon = new Lokasyon { Name = ulke, ParentId = 0 };
                         _context.Lokasyonlar.Add(ulkeLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // Şehir lokasyonunu kontrol et veya oluştur
+                    // Şehir kontrolü
                     var sehirLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Sehir && l.ParentId == ulkeLokasyon.Id);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == sehir && l.ParentId == ulkeLokasyon.Id);
+
                     if (sehirLokasyon == null)
                     {
-                        sehirLokasyon = new Lokasyon
-                        {
-                            Name = personel.Sehir,
-                            ParentId = ulkeLokasyon.Id // Şehrin ParentId'si ülkenin Id'si
-                        };
+                        sehirLokasyon = new Lokasyon { Name = sehir, ParentId = ulkeLokasyon.Id };
                         _context.Lokasyonlar.Add(sehirLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // İlçe lokasyonunu kontrol et veya oluştur
+                    // İlçe kontrolü
                     var ilceLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Ilce && l.ParentId == sehirLokasyon.Id);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == ilce && l.ParentId == sehirLokasyon.Id);
+
                     if (ilceLokasyon == null)
                     {
-                        ilceLokasyon = new Lokasyon
-                        {
-                            Name = personel.Ilce,
-                            ParentId = sehirLokasyon.Id // İlçenin ParentId'si şehrin Id'si
-                        };
+                        ilceLokasyon = new Lokasyon { Name = ilce, ParentId = sehirLokasyon.Id };
                         _context.Lokasyonlar.Add(ilceLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // Personeli ilçe lokasyonuna bağla
+                    if (Image is not null)
+                    {
+                        string guidıd = Guid.NewGuid().ToString();
+                        string fileextension = Path.GetExtension(Image.FileName); // .jpg, .png vb.
+                        string newfilename = $"{guidıd}{fileextension}"; // örn: "b7f8e123-9c4d-4db1-a1ad-2d678a1e0345.jpg"
+                        string klasor = Directory.GetCurrentDirectory() + "/wwwroot/MedyaKutuphanesi/" + newfilename;
+                        using var stream = new FileStream(klasor, FileMode.Create);
+                        Image.CopyTo(stream);
+                        personel.Image = newfilename;
+                    }
+
                     personel.LokasyonId = ilceLokasyon.Id;
-                    
                     _context.Add(personel);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", "Kayıt eklenirken bir hata oluştu.");
+                ModelState.AddModelError("", $"Hata Detayı: {ex.StackTrace}");
             }
             return View(personel);
         }
 
-        // GET: Personel/Edit
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Personel/Edit/5
+        public async Task<IActionResult> Edit(int? id, IFormFile Image)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var personel = await _context.Personeller.FindAsync(id);
+            var personel = await _context.Personeller
+                .Include(p => p.Lokasyon)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (personel == null)
             {
                 return NotFound();
             }
+
+            if (personel.Lokasyon != null)
+            {
+                // İlçenin şehrini bul
+                var sehir = await _context.Lokasyonlar.FindAsync(personel.Lokasyon.ParentId);
+                if (sehir != null)
+                {
+                    // Şehrin ülkesini bul
+                    var ulke = await _context.Lokasyonlar.FindAsync(sehir.ParentId);
+                    if (ulke != null)
+                    {
+                        // ViewBag ile bu bilgileri view'a gönder
+                        ViewBag.SecilenUlke = ulke.Name;
+                        ViewBag.SecilenSehir = sehir.Name;
+                        ViewBag.SecilenIlce = personel.Lokasyon.Name;
+                    }
+                }
+            }
             return View(personel);
         }
 
-        // POST: Personel/Edit
+        // POST: Personel/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Ulke,Sehir,Ilce,Aciklama")] Personel personel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama")] Personel personel, IFormFile? Image, string ulke, string sehir, string ilce)
         {
             if (id != personel.Id)
             {
@@ -149,75 +217,65 @@ namespace PersonelKayit.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Önce ülke lokasyonunu kontrol et veya oluştur
+                    // Ülke kontrolü
                     var ulkeLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Ulke && l.ParentId == 0);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == ulke && l.ParentId == 0);
+
                     if (ulkeLokasyon == null)
                     {
-                        ulkeLokasyon = new Lokasyon
-                        {
-                            Name = personel.Ulke,
-                            ParentId = 0
-                        };
+                        ulkeLokasyon = new Lokasyon { Name = ulke, ParentId = 0 };
                         _context.Lokasyonlar.Add(ulkeLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // Şehir lokasyonunu kontrol et veya oluştur
+                    // Şehir kontrolü
                     var sehirLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Sehir && l.ParentId == ulkeLokasyon.Id);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == sehir && l.ParentId == ulkeLokasyon.Id);
+
                     if (sehirLokasyon == null)
                     {
-                        sehirLokasyon = new Lokasyon
-                        {
-                            Name = personel.Sehir,
-                            ParentId = ulkeLokasyon.Id
-                        };
+                        sehirLokasyon = new Lokasyon { Name = sehir, ParentId = ulkeLokasyon.Id };
                         _context.Lokasyonlar.Add(sehirLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // İlçe lokasyonunu kontrol et veya oluştur
+                    // İlçe kontrolü
                     var ilceLokasyon = await _context.Lokasyonlar
-                        .FirstOrDefaultAsync(l => l.Name == personel.Ilce && l.ParentId == sehirLokasyon.Id);
-                    
+                        .FirstOrDefaultAsync(l => l.Name == ilce && l.ParentId == sehirLokasyon.Id);
+
                     if (ilceLokasyon == null)
                     {
-                        ilceLokasyon = new Lokasyon
-                        {
-                            Name = personel.Ilce,
-                            ParentId = sehirLokasyon.Id
-                        };
+                        ilceLokasyon = new Lokasyon { Name = ilce, ParentId = sehirLokasyon.Id };
                         _context.Lokasyonlar.Add(ilceLokasyon);
                         await _context.SaveChangesAsync();
                     }
 
-                    // Personeli ilçe lokasyonuna bağla
-                    personel.LokasyonId = ilceLokasyon.Id;
+                    if (Image is not null)
+                    {
+                        string guidıd = Guid.NewGuid().ToString();
+                        string fileextension = Path.GetExtension(Image.FileName); // .jpg, .png vb.
+                        string newfilename = $"{guidıd}{fileextension}"; // örn: "b7f8e123-9c4d-4db1-a1ad-2d678a1e0345.jpg"
+                        string klasor = Directory.GetCurrentDirectory() + "/wwwroot/MedyaKutuphanesi/" + newfilename;
+                        using var stream = new FileStream(klasor, FileMode.Create);
+                        Image.CopyTo(stream);
+                        personel.Image = newfilename;
+                    }
 
+                    personel.LokasyonId = ilceLokasyon.Id;
                     _context.Update(personel);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!PersonelExists(personel.Id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("", "Güncelleme sırasında bir hata oluştu.");
+                ModelState.AddModelError("", "Kayıt güncellenirken bir hata oluştu.");
+                Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
             }
             return View(personel);
         }
 
-        // GET: Personel/Delete
+        // GET: Personel/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -227,7 +285,6 @@ namespace PersonelKayit.Controllers
 
             var personel = await _context.Personeller
                 .Include(p => p.Lokasyon)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (personel == null)
@@ -235,10 +292,27 @@ namespace PersonelKayit.Controllers
                 return NotFound();
             }
 
+            if (personel.Lokasyon != null)
+            {
+                // İlçenin şehrini bul
+                var sehir = await _context.Lokasyonlar.FindAsync(personel.Lokasyon.ParentId);
+                if (sehir != null)
+                {
+                    // Şehrin ülkesini bul
+                    var ulke = await _context.Lokasyonlar.FindAsync(sehir.ParentId);
+                    if (ulke != null)
+                    {
+                        ViewBag.SecilenUlke = ulke.Name;
+                        ViewBag.SecilenSehir = sehir.Name;
+                        ViewBag.SecilenIlce = personel.Lokasyon.Name;
+                    }
+                }
+            }
+
             return View(personel);
         }
 
-        // POST: Personel/Delete
+        // POST: Personel/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -251,18 +325,11 @@ namespace PersonelKayit.Controllers
                     _context.Personeller.Remove(personel);
                     await _context.SaveChangesAsync();
                 }
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Silme işlemi sırasında bir hata oluştu.");
-                return RedirectToAction(nameof(Index));
             }
-        }
-
-        private bool PersonelExists(int id)
-        {
-            return _context.Personeller.Any(e => e.Id == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

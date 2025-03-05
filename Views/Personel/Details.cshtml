@@ -4,50 +4,51 @@
     ViewData["Title"] = "Personel Detayları";
 }
 
-<div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="display-4">Personel Detayları</h1>
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
-                <i class="bi bi-pencil-fill"></i> Düzenle
-            </a>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Listeye Dön
-            </a>
-        </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Personel Detayları</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ad)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Ad)</dd>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ad</dt>
+                <dd class="col-sm-9">@Model.Ad</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Soyad)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Soyad)</dd>
+                <dt class="col-sm-3">Soyad</dt>
+                <dd class="col-sm-9">@Model.Soyad</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DogumTarihi)</dt>
-                        <dd class="col-sm-9">@Model.DogumTarihi.ToString("dd.MM.yyyy")</dd>
+                <dt class="col-sm-3">Doğum Tarihi</dt>
+                <dd class="col-sm-9">@Model.DogumTarihi.ToShortDateString()</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cinsiyet)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Cinsiyet)</dd>
+                <dt class="col-sm-3">Cinsiyet</dt>
+                <dd class="col-sm-9">@Model.Cinsiyet</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ulke)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Ulke)</dd>
+                <dt class="col-sm-3">Ülke</dt>
+                <dd class="col-sm-9">@ViewBag.SecilenUlke</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Sehir)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Sehir)</dd>
+                <dt class="col-sm-3">Şehir</dt>
+                <dd class="col-sm-9">@ViewBag.SecilenSehir</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ilce)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Ilce)</dd>
+                <dt class="col-sm-3">İlçe</dt>
+                <dd class="col-sm-9">@ViewBag.SecilenIlce</dd>
 
-                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Aciklama)</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Aciklama)</dd>
-                    </dl>
-                </div>
+                <dt class="col-sm-3">Açıklama</dt>
+                <dd class="col-sm-9">@Model.Aciklama</dd>
+            </dl>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Düzenle
+                </a>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+} 

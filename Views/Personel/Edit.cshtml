@@ -1,19 +1,23 @@
 @model PersonelKayit.Models.Personel
+@using System.Web;
 
 @{
     ViewData["Title"] = "Personel Düzenle";
 }
 
-<div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="display-4">Personel Düzenle</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Personel Düzenle</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
     </div>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form asp-action="Edit">
+                    <form asp-action="Edit" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                         <input type="hidden" asp-for="Id" />
                         
@@ -51,33 +55,35 @@
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Ulke" class="form-label"></label>
-                                <select asp-for="Ulke" class="form-select" id="ulkeSelect">
+                                <label class="form-label">Ülke</label>
+                                <select name="ulke" class="form-select" id="ulkeSelect" required>
                                     <option value="">Seçiniz</option>
-                                    <option value="Türkiye">Türkiye</option>
-                                    <option value="Almanya">Almanya</option>
-                                    <option value="İngiltere">İngiltere</option>
-                                    <option value="Fransa">Fransa</option>
-                                    <option value="İtalya">İtalya</option>
+                                    @foreach (var ulke in new[] { "Türkiye", "Almanya", "Ingiltere", "Fransa", "Italya" })
+                                    {
+                                        <option value="@ulke" selected="@(ViewBag.SecilenUlke == ulke)">@ulke</option>
+                                    }
                                 </select>
-                                <span asp-validation-for="Ulke" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Sehir" class="form-label"></label>
-                                <select asp-for="Sehir" class="form-select" id="sehirSelect">
+                                <label class="form-label">Şehir</label>
+                                <select name="sehir" class="form-select" id="sehirSelect" required>
                                     <option value="">Önce ülke seçiniz</option>
                                 </select>
-                                <span asp-validation-for="Sehir" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Ilce" class="form-label"></label>
-                                <select asp-for="Ilce" class="form-select" id="ilceSelect">
+                                <label class="form-label">İlçe</label>
+                                <select name="ilce" class="form-select" id="ilceSelect" required>
                                     <option value="">Önce şehir seçiniz</option>
                                 </select>
-                                <span asp-validation-for="Ilce" class="text-danger"></span>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label"></label>
+                            <input asp-for="Image" class="form-control" type="file" name="Image" />
+                            <span asp-validation-for="Image" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -86,11 +92,8 @@
                             <span asp-validation-for="Aciklama" class="text-danger"></span>
                         </div>
                         
-                        <div class="d-flex justify-content-between mt-4">
-                            <a asp-action="Index" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Listeye Dön
-                            </a>
-                            <button type="submit" class="btn btn-success">
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle"></i> Kaydet
                             </button>
                         </div>
@@ -106,19 +109,19 @@
     <script>
         $(document).ready(function() {
             const sehirler = {
-                'Türkiye': ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya'],
+                'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
                 'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
-                'İngiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
+                'Ingiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
                 'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
-                'İtalya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
+                'Italya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
             };
 
             const ilceler = {
-                'İstanbul': ['Üsküdar', 'Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu'],
+                'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
                 'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
-                'İzmir': ['Konak', 'Karşıyaka', 'Bornova', 'Buca', 'Çiğli'],
-                'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya'],
-                'Antalya': ['Muratpaşa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
+                'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
+                'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
+                'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
                 'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
                 'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
                 'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
@@ -146,6 +149,9 @@
             const ilceSelect = $('#ilceSelect');
 
             function populateSehirler(ulke, selectedSehir = '') {
+                console.log('Seçilen Ülke:', ulke);
+                console.log('Seçilen Şehir:', selectedSehir);
+                
                 sehirSelect.empty();
                 ilceSelect.empty().prop('disabled', true)
                     .html('<option value="">Önce şehir seçiniz</option>');
@@ -155,7 +161,8 @@
                     
                     const options = ['<option value="">Şehir seçiniz</option>'];
                     sehirler[ulke].forEach(sehir => {
-                        options.push(`<option value="${sehir}" ${sehir === selectedSehir ? 'selected' : ''}>${sehir}</option>`);
+                        const isSelected = selectedSehir && sehir.localeCompare(selectedSehir, 'tr', { sensitivity: 'base' }) === 0;
+                        options.push(`<option value="${sehir}" ${isSelected ? 'selected' : ''}>${sehir}</option>`);
                     });
                     
                     sehirSelect.html(options.join(''));
@@ -166,6 +173,9 @@
             }
 
             function populateIlceler(sehir, selectedIlce = '') {
+                console.log('Seçilen Şehir:', sehir);
+                console.log('Seçilen İlçe:', selectedIlce);
+                
                 ilceSelect.empty();
                 
                 if (sehir && ilceler[sehir]) {
@@ -173,7 +183,8 @@
                     
                     const options = ['<option value="">İlçe seçiniz</option>'];
                     ilceler[sehir].forEach(ilce => {
-                        options.push(`<option value="${ilce}" ${ilce === selectedIlce ? 'selected' : ''}>${ilce}</option>`);
+                        const isSelected = selectedIlce && ilce.localeCompare(selectedIlce, 'tr', { sensitivity: 'base' }) === 0;
+                        options.push(`<option value="${ilce}" ${isSelected ? 'selected' : ''}>${ilce}</option>`);
                     });
                     
                     ilceSelect.html(options.join(''));
@@ -183,11 +194,19 @@
                 }
             }
 
-            const selectedUlke = ulkeSelect.val();
-            const selectedSehir = '@Html.Raw(Json.Serialize(Model.Sehir))';
-            const selectedIlce = '@Html.Raw(Json.Serialize(Model.Ilce))';
+            // ViewBag'den gelen değerleri decode et
+            const selectedUlke = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenUlke))';
+            const selectedSehir = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenSehir))';
+            const selectedIlce = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenIlce))';
             
+            console.log('ViewBag Değerleri (Decoded):');
+            console.log('Ülke:', selectedUlke);
+            console.log('Şehir:', selectedSehir);
+            console.log('İlçe:', selectedIlce);
+            
+            // Sayfa yüklendiğinde seçili değerleri ayarla
             if (selectedUlke) {
+                ulkeSelect.val(selectedUlke);
                 populateSehirler(selectedUlke, selectedSehir);
                 if (selectedSehir) {
                     populateIlceler(selectedSehir, selectedIlce);
@@ -203,4 +222,8 @@
             });
         });
     </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }

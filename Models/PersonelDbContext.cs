@@ -6,6 +6,9 @@ namespace PersonelKayit.Models
     {
         public DbSet<Personel> Personeller { get; set; }
         public DbSet<Lokasyon> Lokasyonlar { get; set; }
+        public DbSet<PersonelMedya> PersonelMedyalari { get; set; }
+        public DbSet<MedyaKutuphanesi> MedyaKutuphaneleri { get; set; }
+
 
         public PersonelDbContext(DbContextOptions<PersonelDbContext> options)
             : base(options)

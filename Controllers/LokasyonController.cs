@@ -18,8 +18,7 @@ namespace PersonelKayit.Controllers
         public async Task<IActionResult> Index()
         {
             var model = await _context.Lokasyonlar
-                .OrderBy(l => l.ParentId)
-                .ThenBy(l => l.Name)
+                .OrderBy(l => l.Id)
                 .ToListAsync();
             return View(model);
         }

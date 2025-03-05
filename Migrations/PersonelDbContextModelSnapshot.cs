@@ -46,6 +46,31 @@ namespace PersonelKayit.Migrations
                     b.ToTable("Lokasyonlar");
                 });
 
+            modelBuilder.Entity("PersonelKayit.Models.MedyaKutuphanesi", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MedyaGuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MedyaKutuphaneleri");
+                });
+
             modelBuilder.Entity("PersonelKayit.Models.Personel", b =>
                 {
                     b.Property<int>("Id")
@@ -70,31 +95,49 @@ namespace PersonelKayit.Migrations
                     b.Property<DateTime>("DogumTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Ilce")
-                        .IsRequired()
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LokasyonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Sehir")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PersonelMedyaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Soyad")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Ulke")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LokasyonId");
 
+                    b.HasIndex("PersonelMedyaId");
+
                     b.ToTable("Personeller");
+                });
+
+            modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PersonelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonelId");
+
+                    b.ToTable("PersonelMedyalari");
                 });
 
             modelBuilder.Entity("PersonelKayit.Models.Personel", b =>
@@ -103,10 +146,28 @@ namespace PersonelKayit.Migrations
                         .WithMany("Personels")
                         .HasForeignKey("LokasyonId");
 
+                    b.HasOne("PersonelKayit.Models.PersonelMedya", null)
+                        .WithMany("Personels")
+                        .HasForeignKey("PersonelMedyaId");
+
                     b.Navigation("Lokasyon");
                 });
 
+            modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
+                {
+                    b.HasOne("PersonelKayit.Models.Personel", "Personel")
+                        .WithMany()
+                        .HasForeignKey("PersonelId");
+
+                    b.Navigation("Personel");
+                });
+
             modelBuilder.Entity("PersonelKayit.Models.Lokasyon", b =>
+                {
+                    b.Navigation("Personels");
+                });
+
+            modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
                 {
                     b.Navigation("Personels");
                 });
