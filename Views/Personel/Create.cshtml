@@ -80,9 +80,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Image" class="form-label"></label>
-                            <input asp-for="Image" class="form-control" type="file" name="Image" />
-                            <span asp-validation-for="Image" class="text-danger"></span>
+                            <label class="form-label">Resimler</label>
+                            <input type="file" id="imageInput" name="Images" class="form-control" multiple accept="image/*" />
+                            <small class="text-muted">Tek veya birden fazla resim seçebilirsiniz</small>
+                            
+                            <!-- Seçilen resimlerin önizlemesi -->
+                            <div id="imagePreviewContainer" class="row mt-2">
+                                <!-- JavaScript ile doldurulacak -->
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -104,11 +109,47 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         $(document).ready(function() {
+            // Resim önizleme işlemi
+            $('#imageInput').on('change', function() {
+                const files = this.files;
+                const previewContainer = $('#imagePreviewContainer');
+                
+                // Önizleme alanını temizle
+                previewContainer.empty();
+                
+                // Seçilen her resim için önizleme oluştur
+                if (files && files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const previewHtml = `
+                                <div class="col-md-3 mb-2">
+                                    <div class="card">
+                                        <img src="${e.target.result}" class="card-img-top" alt="Önizleme">
+                                        <div class="card-body p-2">
+                                            <small class="text-muted">${file.name}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            previewContainer.append(previewHtml);
+                        }
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // Ülke, şehir ve ilçe seçimleri için
             const sehirler = {
-                'Türkiye': ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya'],
+                'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
                 'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
                 'İngiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
                 'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
@@ -116,11 +157,11 @@
             };
 
             const ilceler = {
-                'İstanbul': ['Üsküdar', 'Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu'],
+                'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
                 'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
-                'İzmir': ['Konak', 'Karşıyaka', 'Bornova', 'Buca', 'Çiğli'],
-                'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya'],
-                'Antalya': ['Muratpaşa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
+                'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
+                'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
+                'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
                 'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
                 'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
                 'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
@@ -143,45 +184,47 @@
                 'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
             };
 
-            $('#ulkeSelect').change(function() {
+            const ulkeSelect = $('#ulkeSelect');
+            const sehirSelect = $('#sehirSelect');
+            const ilceSelect = $('#ilceSelect');
+
+            ulkeSelect.on('change', function() {
                 const selectedUlke = $(this).val();
-                const sehirSelect = $('#sehirSelect');
-                const ilceSelect = $('#ilceSelect');
-                
                 sehirSelect.empty();
-                ilceSelect.empty();
-                
-                if (selectedUlke) {
+                ilceSelect.empty().prop('disabled', true)
+                    .html('<option value="">Önce şehir seçiniz</option>');
+
+                if (selectedUlke && sehirler[selectedUlke]) {
                     sehirSelect.prop('disabled', false);
-                    sehirSelect.append('<option value="">Şehir seçiniz</option>');
                     
-                    sehirler[selectedUlke].forEach(function(sehir) {
-                        sehirSelect.append(`<option value="${sehir}">${sehir}</option>`);
+                    const options = ['<option value="">Şehir seçiniz</option>'];
+                    sehirler[selectedUlke].forEach(sehir => {
+                        options.push(`<option value="${sehir}">${sehir}</option>`);
                     });
+                    
+                    sehirSelect.html(options.join(''));
                 } else {
-                    sehirSelect.prop('disabled', true);
-                    sehirSelect.append('<option value="">Önce ülke seçiniz</option>');
-                    ilceSelect.prop('disabled', true);
-                    ilceSelect.append('<option value="">Önce şehir seçiniz</option>');
+                    sehirSelect.prop('disabled', true)
+                        .html('<option value="">Önce ülke seçiniz</option>');
                 }
             });
 
-            $('#sehirSelect').change(function() {
+            sehirSelect.on('change', function() {
                 const selectedSehir = $(this).val();
-                const ilceSelect = $('#ilceSelect');
-                
                 ilceSelect.empty();
-                
+
                 if (selectedSehir && ilceler[selectedSehir]) {
                     ilceSelect.prop('disabled', false);
-                    ilceSelect.append('<option value="">İlçe seçiniz</option>');
                     
-                    ilceler[selectedSehir].forEach(function(ilce) {
-                        ilceSelect.append(`<option value="${ilce}">${ilce}</option>`);
+                    const options = ['<option value="">İlçe seçiniz</option>'];
+                    ilceler[selectedSehir].forEach(ilce => {
+                        options.push(`<option value="${ilce}">${ilce}</option>`);
                     });
+                    
+                    ilceSelect.html(options.join(''));
                 } else {
-                    ilceSelect.prop('disabled', true);
-                    ilceSelect.append('<option value="">Önce şehir seçiniz</option>');
+                    ilceSelect.prop('disabled', true)
+                        .html('<option value="">Önce şehir seçiniz</option>');
                 }
             });
         });

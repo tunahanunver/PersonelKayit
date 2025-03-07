@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Orleans.Runtime;
+using PersonelKayit.Migrations;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
@@ -73,6 +74,13 @@ namespace PersonelKayit.Controllers
                 return NotFound();
             }
 
+            // Personelin medya bilgilerini getir
+            var personelMedyalar = await _context.PersonelMedyalari
+                .Where(pm => pm.PersonelId == id)
+                .ToListAsync();
+
+            ViewBag.PersonelMedyalar = personelMedyalar;
+
             if (personel.Lokasyon != null)
             {
                 // İlçenin şehrini bul
@@ -102,7 +110,7 @@ namespace PersonelKayit.Controllers
         // POST: Personel/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama")] Personel personel, IFormFile? Image, string ulke, string sehir, string ilce)
+        public async Task<IActionResult> Create([Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama")] Personel personel, List<IFormFile?> Images, string ulke, string sehir, string ilce)
         {
             try
             {
@@ -141,33 +149,69 @@ namespace PersonelKayit.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                    if (Image is not null)
-                    {
-                        string guidıd = Guid.NewGuid().ToString();
-                        string fileextension = Path.GetExtension(Image.FileName); // .jpg, .png vb.
-                        string newfilename = $"{guidıd}{fileextension}"; // örn: "b7f8e123-9c4d-4db1-a1ad-2d678a1e0345.jpg"
-                        string klasor = Directory.GetCurrentDirectory() + "/wwwroot/MedyaKutuphanesi/" + newfilename;
-                        using var stream = new FileStream(klasor, FileMode.Create);
-                        Image.CopyTo(stream);
-                        personel.Image = newfilename;
-                    }
-
                     personel.LokasyonId = ilceLokasyon.Id;
                     _context.Add(personel);
                     await _context.SaveChangesAsync();
+
+                    // Resimleri işle
+                    if (Images != null && Images.Count > 0)
+                    {
+                        foreach (var image in Images)
+                        {
+                            if (image.Length > 0)
+                            {
+                                string guidId = Guid.NewGuid().ToString();
+                                string fileExtension = Path.GetExtension(image.FileName);
+                                string newFileName = $"{guidId}{fileExtension}";
+                                string klasor = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", newFileName);
+
+                                using (var stream = new FileStream(klasor, FileMode.Create))
+                                {
+                                    await image.CopyToAsync(stream);
+                                }
+
+                                // PersonelMedya oluştur
+                                var personelMedya = new PersonelMedya
+                                {
+                                    Name = newFileName,
+                                    PersonelId = personel.Id
+                                };
+
+                                _context.PersonelMedyalari.Add(personelMedya);
+                                await _context.SaveChangesAsync();
+
+                                // MedyaKutuphanesi oluştur
+                                var medyaKutuphanesi = new MedyaKutuphanesi
+                                {
+                                    MedyaAdi = image.FileName,
+                                    MedyaGuid = guidId,
+                                    PersonelMedyaId = personelMedya.Id
+                                };
+
+                                _context.MedyaKutuphaneleri.Add(medyaKutuphanesi);
+                                await _context.SaveChangesAsync();
+
+                                // İlk resmi personel.Image olarak ayarla (eğer henüz ayarlanmamışsa)
+                                if (string.IsNullOrEmpty(personel.Image))
+                                {
+                                    personel.Image = newFileName;
+                                }
+                            }
+                        }
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Kayıt eklenirken bir hata oluştu.");
-                ModelState.AddModelError("", $"Hata Detayı: {ex.StackTrace}");
+
             }
             return View(personel);
         }
 
         // GET: Personel/Edit/5
-        public async Task<IActionResult> Edit(int? id, IFormFile Image)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -182,6 +226,13 @@ namespace PersonelKayit.Controllers
             {
                 return NotFound();
             }
+
+            // Personelin medya bilgilerini getir
+            var personelMedyalar = await _context.PersonelMedyalari
+                .Where(pm => pm.PersonelId == id)
+                .ToListAsync();
+
+            ViewBag.PersonelMedyalar = personelMedyalar;
 
             if (personel.Lokasyon != null)
             {
@@ -206,7 +257,7 @@ namespace PersonelKayit.Controllers
         // POST: Personel/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama")] Personel personel, IFormFile? Image, string ulke, string sehir, string ilce)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,DogumTarihi,Cinsiyet,Aciklama,Image")] Personel personel, List<IFormFile> Images, string ulke, string sehir, string ilce)
         {
             if (id != personel.Id)
             {
@@ -250,17 +301,55 @@ namespace PersonelKayit.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                    if (Image is not null)
-                    {
-                        string guidıd = Guid.NewGuid().ToString();
-                        string fileextension = Path.GetExtension(Image.FileName); // .jpg, .png vb.
-                        string newfilename = $"{guidıd}{fileextension}"; // örn: "b7f8e123-9c4d-4db1-a1ad-2d678a1e0345.jpg"
-                        string klasor = Directory.GetCurrentDirectory() + "/wwwroot/MedyaKutuphanesi/" + newfilename;
-                        using var stream = new FileStream(klasor, FileMode.Create);
-                        Image.CopyTo(stream);
-                        personel.Image = newfilename;
-                    }
+                    var existingPersonel = await _context.Personeller.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
 
+                    // Resimleri işle
+                    if (Images != null && Images.Count > 0)
+                    {
+                        foreach (var image in Images)
+                        {
+                            if (image.Length > 0)
+                            {
+                                string guidId = Guid.NewGuid().ToString();
+                                string fileExtension = Path.GetExtension(image.FileName);
+                                string newFileName = $"{guidId}{fileExtension}";
+                                string klasor = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", newFileName);
+
+                                using (var stream = new FileStream(klasor, FileMode.Create))
+                                {
+                                    await image.CopyToAsync(stream);
+                                }
+
+                                // PersonelMedya oluştur
+                                var personelMedya = new PersonelMedya
+                                {
+                                    Name = newFileName,
+                                    PersonelId = personel.Id
+                                };
+
+                                _context.PersonelMedyalari.Add(personelMedya);
+                                await _context.SaveChangesAsync();
+
+                                // MedyaKutuphanesi oluştur
+                                var medyaKutuphanesi = new MedyaKutuphanesi
+                                {
+                                    MedyaAdi = image.FileName,
+                                    MedyaGuid = guidId,
+                                    PersonelMedyaId = personelMedya.Id
+                                };
+
+                                _context.MedyaKutuphaneleri.Add(medyaKutuphanesi);
+                                await _context.SaveChangesAsync();
+
+                                // İlk resmi personel.Image olarak ayarla (eğer henüz ayarlanmamışsa)
+                                if (string.IsNullOrEmpty(personel.Image))
+                                {
+                                    personel.Image = newFileName;
+                                }
+                            }
+                        }
+                    }
+                    
                     personel.LokasyonId = ilceLokasyon.Id;
                     _context.Update(personel);
                     await _context.SaveChangesAsync();
@@ -270,7 +359,6 @@ namespace PersonelKayit.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Kayıt güncellenirken bir hata oluştu.");
-                Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
             }
             return View(personel);
         }
@@ -291,6 +379,13 @@ namespace PersonelKayit.Controllers
             {
                 return NotFound();
             }
+
+            // Personelin medya bilgilerini getir
+            var personelMedyalar = await _context.PersonelMedyalari
+                .Where(pm => pm.PersonelId == id)
+                .ToListAsync();
+
+            ViewBag.PersonelMedyalar = personelMedyalar;
 
             if (personel.Lokasyon != null)
             {
@@ -317,19 +412,115 @@ namespace PersonelKayit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Personel bilgilerini getir
+            var personel = await _context.Personeller.FindAsync(id);
+
+            if (personel == null)
+            {
+                return NotFound();
+            }
+
+            // Personelin TÜM medya bilgilerini getir
+            var personelMedyalar = await _context.PersonelMedyalari
+                .Where(pm => pm.PersonelId == id)
+                .ToListAsync();
+
+            foreach (var personelMedya in personelMedyalar)
+            {
+                // MedyaKutuphanesi bilgilerini getir
+                var medyaKutuphanesi = await _context.MedyaKutuphaneleri
+                    .FirstOrDefaultAsync(mk => mk.PersonelMedyaId == personelMedya.Id);
+
+                if (medyaKutuphanesi != null)
+                {
+                    // MedyaKutuphanesi kaydını sil
+                    _context.MedyaKutuphaneleri.Remove(medyaKutuphanesi);
+                }
+
+                // Dosya sisteminden resmi sil
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", personelMedya.Name);
+                if (System.IO.File.Exists(filePath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    catch (Exception)
+                    {
+                        // Dosya silinirken hata oluşursa devam et
+                    }
+                }
+
+                // PersonelMedya kaydını sil
+                _context.PersonelMedyalari.Remove(personelMedya);
+            }
+            
+            // Tüm medya kayıtlarını sildikten sonra değişiklikleri kaydet
+            await _context.SaveChangesAsync();
+
+            // Personel kaydını sil
+            _context.Personeller.Remove(personel);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+        
+        // POST: Personel/DeleteImage
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
             try
             {
-                var personel = await _context.Personeller.FindAsync(id);
-                if (personel != null)
+                // PersonelMedya bilgilerini getir
+                var personelMedya = await _context.PersonelMedyalari.FindAsync(id);
+                
+                if (personelMedya == null)
                 {
-                    _context.Personeller.Remove(personel);
-                    await _context.SaveChangesAsync();
+                    return Json(new { success = false, message = "Resim bulunamadı." });
                 }
+                
+                // Personel bilgilerini getir
+                var personel = await _context.Personeller.FindAsync(personelMedya.PersonelId);
+                
+                // MedyaKutuphanesi bilgilerini getir
+                var medyaKutuphanesi = await _context.MedyaKutuphaneleri
+                    .FirstOrDefaultAsync(mk => mk.PersonelMedyaId == personelMedya.Id);
+                
+                if (medyaKutuphanesi != null)
+                {
+                    // MedyaKutuphanesi kaydını sil
+                    _context.MedyaKutuphaneleri.Remove(medyaKutuphanesi);
+                }
+                
+                // Eğer silinen resim, personelin ana resmi ise başka bir resmi ana resim yap
+                if (personel != null && personel.Image == personelMedya.Name)
+                {
+                    // Başka bir resim varsa onu ana resim yap, yoksa null yap
+                    var otherMedya = await _context.PersonelMedyalari
+                        .Where(pm => pm.PersonelId == personel.Id && pm.Id != personelMedya.Id)
+                        .FirstOrDefaultAsync();
+                    
+                    personel.Image = otherMedya?.Name;
+                    _context.Update(personel);
+                }
+                
+                // Dosya sisteminden resmi sil
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", personelMedya.Name);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                
+                // PersonelMedya kaydını sil
+                _context.PersonelMedyalari.Remove(personelMedya);
+                await _context.SaveChangesAsync();
+                
+                return Json(new { success = true });
             }
             catch (Exception ex)
             {
+                return Json(new { success = false, message = ex.Message });
             }
-            return RedirectToAction(nameof(Index));
         }
     }
 }

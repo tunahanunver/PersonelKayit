@@ -54,6 +54,9 @@ namespace PersonelKayit.Models
         [Display(Name = "Resim")]
         public string? Image {  get; set; }
 
+        [NotMapped]
+        public List<PersonelMedya> Medyalar { get; set; } = new List<PersonelMedya>();
+
         // Personel hakkında ek bilgiler
         [Display(Name = "Açıklama")]
         [DataType(DataType.MultilineText)]

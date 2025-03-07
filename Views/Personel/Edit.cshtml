@@ -1,229 +1,315 @@
+@using System.IO;
 @model PersonelKayit.Models.Personel
 @using System.Web;
 
 @{
-    ViewData["Title"] = "Personel Düzenle";
+	ViewData["Title"] = "Personel Düzenle";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Personel Düzenle</h1>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Listeye Dön
-        </a>
-    </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1>Personel Düzenle</h1>
+		<a asp-action="Index" class="btn btn-secondary">
+			<i class="bi bi-arrow-left"></i> Listeye Dön
+		</a>
+	</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form asp-action="Edit" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                        <input type="hidden" asp-for="Id" />
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Ad" class="form-label"></label>
-                                <input asp-for="Ad" class="form-control" />
-                                <span asp-validation-for="Ad" class="text-danger"></span>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Soyad" class="form-label"></label>
-                                <input asp-for="Soyad" class="form-control" />
-                                <span asp-validation-for="Soyad" class="text-danger"></span>
-                            </div>
-                        </div>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<form asp-action="Edit" enctype="multipart/form-data">
+						<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+						<input type="hidden" asp-for="Id" />
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DogumTarihi" class="form-label"></label>
-                                <input asp-for="DogumTarihi" class="form-control" type="date" />
-                                <span asp-validation-for="DogumTarihi" class="text-danger"></span>
-                            </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label asp-for="Ad" class="form-label"></label>
+								<input asp-for="Ad" class="form-control" />
+								<span asp-validation-for="Ad" class="text-danger"></span>
+							</div>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Cinsiyet" class="form-label"></label>
-                                <select asp-for="Cinsiyet" class="form-select">
-                                    <option value="">Seçiniz</option>
-                                    <option value="Erkek">Erkek</option>
-                                    <option value="Kadın">Kadın</option>
-                                </select>
-                                <span asp-validation-for="Cinsiyet" class="text-danger"></span>
-                            </div>
-                        </div>
+							<div class="col-md-6 mb-3">
+								<label asp-for="Soyad" class="form-label"></label>
+								<input asp-for="Soyad" class="form-control" />
+								<span asp-validation-for="Soyad" class="text-danger"></span>
+							</div>
+						</div>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Ülke</label>
-                                <select name="ulke" class="form-select" id="ulkeSelect" required>
-                                    <option value="">Seçiniz</option>
-                                    @foreach (var ulke in new[] { "Türkiye", "Almanya", "Ingiltere", "Fransa", "Italya" })
-                                    {
-                                        <option value="@ulke" selected="@(ViewBag.SecilenUlke == ulke)">@ulke</option>
-                                    }
-                                </select>
-                            </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label asp-for="DogumTarihi" class="form-label"></label>
+								<input asp-for="DogumTarihi" class="form-control" type="date" />
+								<span asp-validation-for="DogumTarihi" class="text-danger"></span>
+							</div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Şehir</label>
-                                <select name="sehir" class="form-select" id="sehirSelect" required>
-                                    <option value="">Önce ülke seçiniz</option>
-                                </select>
-                            </div>
+							<div class="col-md-6 mb-3">
+								<label asp-for="Cinsiyet" class="form-label"></label>
+								<select asp-for="Cinsiyet" class="form-select">
+									<option value="">Seçiniz</option>
+									<option value="Erkek">Erkek</option>
+									<option value="Kadın">Kadın</option>
+								</select>
+								<span asp-validation-for="Cinsiyet" class="text-danger"></span>
+							</div>
+						</div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">İlçe</label>
-                                <select name="ilce" class="form-select" id="ilceSelect" required>
-                                    <option value="">Önce şehir seçiniz</option>
-                                </select>
-                            </div>
-                        </div>
+						<div class="row">
+							<div class="col-md-4 mb-3">
+								<label class="form-label">Ülke</label>
+								<select name="ulke" class="form-select" id="ulkeSelect" required>
+									<option value="">Seçiniz</option>
+									@foreach (var ulke in new[] { "Türkiye", "Almanya", "Ingiltere", "Fransa", "Italya" })
+									{
+										<option value="@ulke" selected="@(ViewBag.SecilenUlke == ulke)">@ulke</option>
+									}
+								</select>
+							</div>
 
-                        <div class="mb-3">
-                            <label asp-for="Image" class="form-label"></label>
-                            <input asp-for="Image" class="form-control" type="file" name="Image" />
-                            <span asp-validation-for="Image" class="text-danger"></span>
-                        </div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label">Şehir</label>
+								<select name="sehir" class="form-select" id="sehirSelect" required>
+									<option value="">Önce ülke seçiniz</option>
+								</select>
+							</div>
 
-                        <div class="mb-3">
-                            <label asp-for="Aciklama" class="form-label"></label>
-                            <textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="Aciklama" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Kaydet
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label">İlçe</label>
+								<select name="ilce" class="form-select" id="ilceSelect" required>
+									<option value="">Önce şehir seçiniz</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Mevcut Resimler</label>
+
+							<!-- Mevcut resimleri göster -->
+							<div class="row mb-3">
+								@foreach (var medya in ViewBag.PersonelMedyalar ?? new List<PersonelMedya>())
+								{
+									<div class="col-md-3 mb-2">
+										<div class="card">
+											<img src="~/MedyaKutuphanesi/@medya.Name" class="card-img-top" alt="Resim">
+											<div class="card-body p-2">
+												<div class="d-flex justify-content-between">
+													<small class="text-muted">@medya.Name</small>
+													<button type="button" class="btn btn-sm btn-danger" onclick="deleteImage(@medya.Id)">
+														<i class="bi bi-trash"></i>
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Yeni Resimler</label>
+							<input type="file" id="imageInput" name="Images" class="form-control" multiple accept="image/*" />
+							<small class="text-muted">Tek veya birden fazla resim seçebilirsiniz</small>
+							
+							<!-- Seçilen resimlerin önizlemesi -->
+							<div id="imagePreviewContainer" class="row mt-2">
+								<!-- JavaScript ile doldurulacak -->
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Aciklama" class="form-label"></label>
+							<textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
+							<span asp-validation-for="Aciklama" class="text-danger"></span>
+						</div>
+
+						<div class="d-flex justify-content-end">
+							<button type="submit" class="btn btn-primary">
+								<i class="bi bi-check-circle"></i> Kaydet
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $(document).ready(function() {
-            const sehirler = {
-                'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
-                'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
-                'Ingiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
-                'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
-                'Italya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
-            };
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		$(document).ready(function() {
+			// Resim önizleme işlemi
+			$('#imageInput').on('change', function() {
+				const files = this.files;
+				const previewContainer = $('#imagePreviewContainer');
+				
+				// Önizleme alanını temizle
+				previewContainer.empty();
+				
+				// Seçilen her resim için önizleme oluştur
+				if (files && files.length > 0) {
+					for (let i = 0; i < files.length; i++) {
+						const file = files[i];
+						const reader = new FileReader();
+						
+						reader.onload = function(e) {
+							const previewHtml = `
+								<div class="col-md-3 mb-2">
+									<div class="card">
+										<img src="${e.target.result}" class="card-img-top" alt="Önizleme">
+										<div class="card-body p-2">
+											<small class="text-muted">${file.name}</small>
+										</div>
+									</div>
+								</div>
+							`;
+							previewContainer.append(previewHtml);
+						}
+						
+						reader.readAsDataURL(file);
+					}
+				}
+			});
 
-            const ilceler = {
-                'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
-                'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
-                'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
-                'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
-                'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
-                'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
-                'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
-                'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
-                'Köln': ['Innenstadt', 'Rodenkirchen', 'Lindenthal', 'Ehrenfeld', 'Nippes'],
-                'Frankfurt': ['Innenstadt', 'Bockenheim', 'Sachsenhausen', 'Nordend', 'Westend'],
-                'Londra': ['Westminster', 'Camden', 'Greenwich', 'Hackney', 'Islington'],
-                'Manchester': ['City Centre', 'Ancoats', 'Chorlton', 'Didsbury', 'Fallowfield'],
-                'Birmingham': ['City Centre', 'Edgbaston', 'Moseley', 'Harborne', 'Selly Oak'],
-                'Liverpool': ['City Centre', 'Allerton', 'Aigburth', 'Childwall', 'Woolton'],
-                'Leeds': ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Horsforth'],
-                'Paris': ['Le Marais', 'Montmartre', 'Saint-Germain', 'Champs-Élysées', 'Bastille'],
-                'Marsilya': ['Vieux-Port', 'Le Panier', 'Noailles', 'Endoume', 'Bompard'],
-                'Lyon': ['Presqu\'île', 'Croix-Rousse', 'Guillotière', 'Vieux Lyon', 'Fourvière'],
-                'Toulouse': ['Capitole', 'Saint-Cyprien', 'Carmes', 'Saint-Michel', 'Minimes'],
-                'Nice': ['Vieux Nice', 'Cimiez', 'Gambetta', 'Liberation', 'Port'],
-                'Roma': ['Centro Storico', 'Trastevere', 'Testaccio', 'Prati', 'Monti'],
-                'Milano': ['Duomo', 'Navigli', 'Brera', 'Isola', 'Porta Romana'],
-                'Napoli': ['Centro Storico', 'Chiaia', 'Vomero', 'Posillipo', 'San Carlo'],
-                'Torino': ['Centro', 'San Salvario', 'Crocetta', 'Aurora', 'Lingotto'],
-                'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
-            };
+			const sehirler = {
+				'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
+				'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
+				'Ingiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
+				'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
+				'Italya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
+			};
 
-            const ulkeSelect = $('#ulkeSelect');
-            const sehirSelect = $('#sehirSelect');
-            const ilceSelect = $('#ilceSelect');
+			const ilceler = {
+				'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
+				'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
+				'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
+				'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
+				'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
+				'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
+				'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
+				'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
+				'Köln': ['Innenstadt', 'Rodenkirchen', 'Lindenthal', 'Ehrenfeld', 'Nippes'],
+				'Frankfurt': ['Innenstadt', 'Bockenheim', 'Sachsenhausen', 'Nordend', 'Westend'],
+				'Londra': ['Westminster', 'Camden', 'Greenwich', 'Hackney', 'Islington'],
+				'Manchester': ['City Centre', 'Ancoats', 'Chorlton', 'Didsbury', 'Fallowfield'],
+				'Birmingham': ['City Centre', 'Edgbaston', 'Moseley', 'Harborne', 'Selly Oak'],
+				'Liverpool': ['City Centre', 'Allerton', 'Aigburth', 'Childwall', 'Woolton'],
+				'Leeds': ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Horsforth'],
+				'Paris': ['Le Marais', 'Montmartre', 'Saint-Germain', 'Champs-Élysées', 'Bastille'],
+				'Marsilya': ['Vieux-Port', 'Le Panier', 'Noailles', 'Endoume', 'Bompard'],
+				'Lyon': ['Presqu\'île', 'Croix-Rousse', 'Guillotière', 'Vieux Lyon', 'Fourvière'],
+				'Toulouse': ['Capitole', 'Saint-Cyprien', 'Carmes', 'Saint-Michel', 'Minimes'],
+				'Nice': ['Vieux Nice', 'Cimiez', 'Gambetta', 'Liberation', 'Port'],
+				'Roma': ['Centro Storico', 'Trastevere', 'Testaccio', 'Prati', 'Monti'],
+				'Milano': ['Duomo', 'Navigli', 'Brera', 'Isola', 'Porta Romana'],
+				'Napoli': ['Centro Storico', 'Chiaia', 'Vomero', 'Posillipo', 'San Carlo'],
+				'Torino': ['Centro', 'San Salvario', 'Crocetta', 'Aurora', 'Lingotto'],
+				'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
+			};
 
-            function populateSehirler(ulke, selectedSehir = '') {
-                console.log('Seçilen Ülke:', ulke);
-                console.log('Seçilen Şehir:', selectedSehir);
-                
-                sehirSelect.empty();
-                ilceSelect.empty().prop('disabled', true)
-                    .html('<option value="">Önce şehir seçiniz</option>');
-                
-                if (ulke && sehirler[ulke]) {
-                    sehirSelect.prop('disabled', false);
-                    
-                    const options = ['<option value="">Şehir seçiniz</option>'];
-                    sehirler[ulke].forEach(sehir => {
-                        const isSelected = selectedSehir && sehir.localeCompare(selectedSehir, 'tr', { sensitivity: 'base' }) === 0;
-                        options.push(`<option value="${sehir}" ${isSelected ? 'selected' : ''}>${sehir}</option>`);
-                    });
-                    
-                    sehirSelect.html(options.join(''));
-                } else {
-                    sehirSelect.prop('disabled', true)
-                        .html('<option value="">Önce ülke seçiniz</option>');
-                }
-            }
+			const ulkeSelect = $('#ulkeSelect');
+			const sehirSelect = $('#sehirSelect');
+			const ilceSelect = $('#ilceSelect');
 
-            function populateIlceler(sehir, selectedIlce = '') {
-                console.log('Seçilen Şehir:', sehir);
-                console.log('Seçilen İlçe:', selectedIlce);
-                
-                ilceSelect.empty();
-                
-                if (sehir && ilceler[sehir]) {
-                    ilceSelect.prop('disabled', false);
-                    
-                    const options = ['<option value="">İlçe seçiniz</option>'];
-                    ilceler[sehir].forEach(ilce => {
-                        const isSelected = selectedIlce && ilce.localeCompare(selectedIlce, 'tr', { sensitivity: 'base' }) === 0;
-                        options.push(`<option value="${ilce}" ${isSelected ? 'selected' : ''}>${ilce}</option>`);
-                    });
-                    
-                    ilceSelect.html(options.join(''));
-                } else {
-                    ilceSelect.prop('disabled', true)
-                        .html('<option value="">Önce şehir seçiniz</option>');
-                }
-            }
+			function populateSehirler(ulke, selectedSehir = '') {
+				console.log('Seçilen Ülke:', ulke);
+				console.log('Seçilen Şehir:', selectedSehir);
 
-            // ViewBag'den gelen değerleri decode et
-            const selectedUlke = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenUlke))';
-            const selectedSehir = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenSehir))';
-            const selectedIlce = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenIlce))';
-            
-            console.log('ViewBag Değerleri (Decoded):');
-            console.log('Ülke:', selectedUlke);
-            console.log('Şehir:', selectedSehir);
-            console.log('İlçe:', selectedIlce);
-            
-            // Sayfa yüklendiğinde seçili değerleri ayarla
-            if (selectedUlke) {
-                ulkeSelect.val(selectedUlke);
-                populateSehirler(selectedUlke, selectedSehir);
-                if (selectedSehir) {
-                    populateIlceler(selectedSehir, selectedIlce);
-                }
-            }
+				sehirSelect.empty();
+				ilceSelect.empty().prop('disabled', true)
+					.html('<option value="">Önce şehir seçiniz</option>');
 
-            ulkeSelect.on('change', function() {
-                populateSehirler(this.value);
-            });
+				if (ulke && sehirler[ulke]) {
+					sehirSelect.prop('disabled', false);
 
-            sehirSelect.on('change', function() {
-                populateIlceler(this.value);
-            });
-        });
-    </script>
+					const options = ['<option value="">Şehir seçiniz</option>'];
+					sehirler[ulke].forEach(sehir => {
+						const isSelected = selectedSehir && sehir.localeCompare(selectedSehir, 'tr', { sensitivity: 'base' }) === 0;
+						options.push(`<option value="${sehir}" ${isSelected ? 'selected' : ''}>${sehir}</option>`);
+					});
+
+					sehirSelect.html(options.join(''));
+				} else {
+					sehirSelect.prop('disabled', true)
+						.html('<option value="">Önce ülke seçiniz</option>');
+				}
+			}
+
+			function populateIlceler(sehir, selectedIlce = '') {
+				console.log('Seçilen Şehir:', sehir);
+				console.log('Seçilen İlçe:', selectedIlce);
+
+				ilceSelect.empty();
+
+				if (sehir && ilceler[sehir]) {
+					ilceSelect.prop('disabled', false);
+
+					const options = ['<option value="">İlçe seçiniz</option>'];
+					ilceler[sehir].forEach(ilce => {
+						const isSelected = selectedIlce && ilce.localeCompare(selectedIlce, 'tr', { sensitivity: 'base' }) === 0;
+						options.push(`<option value="${ilce}" ${isSelected ? 'selected' : ''}>${ilce}</option>`);
+					});
+
+					ilceSelect.html(options.join(''));
+				} else {
+					ilceSelect.prop('disabled', true)
+						.html('<option value="">Önce şehir seçiniz</option>');
+				}
+			}
+
+			// ViewBag'den gelen değerleri decode et
+			const selectedUlke = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenUlke))';
+			const selectedSehir = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenSehir))';
+			const selectedIlce = '@Html.Raw(HttpUtility.HtmlDecode(ViewBag.SecilenIlce))';
+
+			console.log('ViewBag Değerleri (Decoded):');
+			console.log('Ülke:', selectedUlke);
+			console.log('Şehir:', selectedSehir);
+			console.log('İlçe:', selectedIlce);
+
+			// Sayfa yüklendiğinde seçili değerleri ayarla
+			if (selectedUlke) {
+				ulkeSelect.val(selectedUlke);
+				populateSehirler(selectedUlke, selectedSehir);
+				if (selectedSehir) {
+					populateIlceler(selectedSehir, selectedIlce);
+				}
+			}
+
+			ulkeSelect.on('change', function() {
+				populateSehirler(this.value);
+			});
+
+			sehirSelect.on('change', function() {
+				populateIlceler(this.value);
+			});
+		});
+	</script>
+
+	<script>
+		function deleteImage(id) {
+			if (confirm('Bu resmi silmek istediğinizden emin misiniz?')) {
+				$.ajax({
+					url: '@Url.Action("DeleteImage", "Personel")',
+					type: 'POST',
+					data: { id: id },
+					success: function(result) {
+						if (result.success) {
+							// Sayfayı yenile
+							location.reload();
+						}
+					},
+					error: function() {
+						alert('Resim silinirken bir hata oluştu.');
+					}
+				});
+			}
+		}
+	</script>
 }
 
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }

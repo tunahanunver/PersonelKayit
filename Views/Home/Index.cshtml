@@ -4,7 +4,7 @@
 
 <div class="text-center mb-4">
     <h1 class="display-4">Personel Kayıt Sistemi</h1>
-    <p class="lead">Personel ve lokasyon yönetimi için geliştirilmiş web uygulaması.</p>
+    <p class="lead">Personel, lokasyon ve media yönetimi için geliştirilmiş web uygulaması.</p>
 </div>
 
 <div class="row">
@@ -32,6 +32,32 @@
                 <p class="card-text">Ülke, şehir ve ilçe bilgilerini görüntüleyip yönetebilirsiniz.</p>
                 <a asp-controller="Lokasyon" asp-action="Index" class="btn btn-primary">
                     <i class="bi bi-arrow-right"></i> Lokasyonları Görüntüle
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-file-person text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Personel Media</h5>
+                <p class="card-text">Personel media bilgilerini görüntüleyip yönetebilirsiniz.</p>
+                <a asp-controller="PersonelMedya" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Personel Media
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-collection-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Media Kütüphanesi</h5>
+                <p class="card-text">Media kütüphanesi bilgilerini görüntüleyip yönetebilirsiniz.</p>
+                <a asp-controller="Mk" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Media Kütüphanesi
                 </a>
             </div>
         </div>

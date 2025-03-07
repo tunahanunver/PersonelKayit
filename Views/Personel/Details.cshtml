@@ -1,54 +1,87 @@
 @model PersonelKayit.Models.Personel
 
 @{
-    ViewData["Title"] = "Personel Detayları";
+	ViewData["Title"] = "Personel Detayları";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Personel Detayları</h1>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Listeye Dön
-        </a>
-    </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1>Personel Detayları</h1>
+		<a asp-action="Index" class="btn btn-secondary">
+			<i class="bi bi-arrow-left"></i> Listeye Dön
+		</a>
+	</div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Ad</dt>
-                <dd class="col-sm-9">@Model.Ad</dd>
+	<div class="card shadow-sm">
+		<div class="card-body">
+			<dl class="row">
+				<dt class="col-sm-3">Ad</dt>
+				<dd class="col-sm-9">@Model.Ad</dd>
 
-                <dt class="col-sm-3">Soyad</dt>
-                <dd class="col-sm-9">@Model.Soyad</dd>
+				<dt class="col-sm-3">Soyad</dt>
+				<dd class="col-sm-9">@Model.Soyad</dd>
 
-                <dt class="col-sm-3">Doğum Tarihi</dt>
-                <dd class="col-sm-9">@Model.DogumTarihi.ToShortDateString()</dd>
+				<dt class="col-sm-3">Doğum Tarihi</dt>
+				<dd class="col-sm-9">@Model.DogumTarihi.ToShortDateString()</dd>
 
-                <dt class="col-sm-3">Cinsiyet</dt>
-                <dd class="col-sm-9">@Model.Cinsiyet</dd>
+				<dt class="col-sm-3">Cinsiyet</dt>
+				<dd class="col-sm-9">@Model.Cinsiyet</dd>
 
-                <dt class="col-sm-3">Ülke</dt>
-                <dd class="col-sm-9">@ViewBag.SecilenUlke</dd>
+				<dt class="col-sm-3">Ülke</dt>
+				<dd class="col-sm-9">@ViewBag.SecilenUlke</dd>
 
-                <dt class="col-sm-3">Şehir</dt>
-                <dd class="col-sm-9">@ViewBag.SecilenSehir</dd>
+				<dt class="col-sm-3">Şehir</dt>
+				<dd class="col-sm-9">@ViewBag.SecilenSehir</dd>
 
-                <dt class="col-sm-3">İlçe</dt>
-                <dd class="col-sm-9">@ViewBag.SecilenIlce</dd>
+				<dt class="col-sm-3">İlçe</dt>
+				<dd class="col-sm-9">@ViewBag.SecilenIlce</dd>
 
-                <dt class="col-sm-3">Açıklama</dt>
-                <dd class="col-sm-9">@Model.Aciklama</dd>
-            </dl>
+				<dt class="col-sm-3">Resim</dt>
+				<dd class="col-sm-9">
+					<div class="row">
+						<div class="col-md-12 mb-4">
+							<div class="row">
+								@foreach (var medya in ViewBag.PersonelMedyalar ?? new List<PersonelMedya>())
+								{
+									<div class="col-md-3 mb-3">
+										<div class="card">
+											<img src="~/MedyaKutuphanesi/@medya.Name" class="card-img-top" alt="Resim">
+											<div class="card-body p-2">
+												<small class="text-muted">@medya.Name</small>
+											</div>
+										</div>
+									</div>
+								}
 
-            <div class="d-flex justify-content-end gap-2">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
-                    <i class="bi bi-pencil"></i> Düzenle
-                </a>
-            </div>
-        </div>
-    </div>
+								@if ((ViewBag.PersonelMedyalar == null || ((List<PersonelMedya>)ViewBag.PersonelMedyalar).Count == 0) && !string.IsNullOrEmpty(Model.Image))
+								{
+									<div class="col-md-3 mb-3">
+										<div class="card">
+											<img src="~/MedyaKutuphanesi/@Model.Image" class="card-img-top" alt="Resim">
+											<div class="card-body p-2">
+												<small class="text-muted">@Model.Image</small>
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				</dd>
+
+				<dt class="col-sm-3">Açıklama</dt>
+				<dd class="col-sm-9">@Model.Aciklama</dd>
+			</dl>
+
+			<div class="d-flex justify-content-end gap-2">
+				<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+					<i class="bi bi-pencil"></i> Düzenle
+				</a>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 } 

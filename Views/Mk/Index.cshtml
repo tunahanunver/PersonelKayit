@@ -1,12 +1,12 @@
-﻿@model IEnumerable<PersonelKayit.Models.Lokasyon>
+﻿@model IEnumerable<PersonelKayit.Models.MedyaKutuphanesi>
 
 @{
-    ViewData["Title"] = "Lokasyon Listesi";
+	ViewData["Title"] = "Index";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Lokasyon Listesi</h1>
+        <h1>Media Kütüphanesi</h1>
         @* <a asp-action="Create" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Yeni Lokasyon Ekle
         </a> *@
@@ -18,9 +18,15 @@
                 <table class="table table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>@Html.DisplayNameFor(model => model.Id)</th>
-                            <th>@Html.DisplayNameFor(model => model.Name)</th>
-                            <th>@Html.DisplayNameFor(model => model.ParentId)</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PersonelMedyaId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MedyaAdi)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MedyaGuid)
+                            </th>
                             @* <th>@Html.DisplayNameFor(model => model.Description)</th>
                             <th class="text-end">İşlemler</th> *@
                         </tr>
@@ -29,9 +35,15 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.ParentId)</td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PersonelMedyaId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MedyaAdi)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MedyaGuid)
+                                </td>
                                 @* <td>@Html.DisplayFor(modelItem => item.Description)</td> *@
                                 <td class="text-end">
                                     @* <div class="btn-group" role="group">
@@ -56,5 +68,5 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }

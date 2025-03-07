@@ -5,16 +5,17 @@ namespace PersonelKayit.Models
     public class PersonelMedya
     {
         [Key]
-        [Display(Name = "Medya ID")]
+        [Display(Name = "Media ID")]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Medya adı zorunludur.")]
-        [Display(Name = "Medya İsmi")]
+
+        [Required(ErrorMessage = "Media adı zorunludur.")]
+        [Display(Name = "Media İsmi")]
         public string? Name { get; set; }
 
         [Display(Name = "Personel ID")]
         public int? PersonelId { get; set; }
         public Personel? Personel { get; set; }
-        public IEnumerable<Personel>? Personels { get; set; }
+        public MedyaKutuphanesi? MedyaKutuphanesi { get; set; }
     }
 }

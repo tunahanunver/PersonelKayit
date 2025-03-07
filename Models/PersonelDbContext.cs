@@ -19,7 +19,10 @@ namespace PersonelKayit.Models
         {
             modelBuilder.Entity<Lokasyon>().Property(b => b.Name).IsRequired().HasColumnType("varchar(50)").HasMaxLength(50);
             modelBuilder.Entity<Personel>().HasOne(p=>p.Lokasyon).WithMany(p=>p.Personels).HasForeignKey(p=>p.LokasyonId);
-            
+            modelBuilder.Entity<PersonelMedya>().HasOne(pm => pm.Personel).WithMany().HasForeignKey(pm => pm.PersonelId);
+            modelBuilder.Entity<MedyaKutuphanesi>().HasOne(mk => mk.PersonelMedya).WithOne(mk => mk.MedyaKutuphanesi).HasForeignKey<MedyaKutuphanesi>(mk => mk.PersonelMedyaId);
+
+           
             base.OnModelCreating(modelBuilder);
         }
     }
