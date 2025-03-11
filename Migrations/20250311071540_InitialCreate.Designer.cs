@@ -12,8 +12,8 @@ using PersonelKayit.Models;
 namespace PersonelKayit.Migrations
 {
     [DbContext(typeof(PersonelDbContext))]
-    [Migration("20250305125415_personelMedya")]
-    partial class personelMedya
+    [Migration("20250311071540_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,15 +57,11 @@ namespace PersonelKayit.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("MedyaAdi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MedyaGuid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("MedyaURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -104,9 +100,6 @@ namespace PersonelKayit.Migrations
                     b.Property<int?>("LokasyonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonelMedyaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Soyad")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -115,8 +108,6 @@ namespace PersonelKayit.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LokasyonId");
-
-                    b.HasIndex("PersonelMedyaId");
 
                     b.ToTable("Personeller");
                 });
@@ -129,14 +120,15 @@ namespace PersonelKayit.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MedyaId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("PersonelId")
+                    b.Property<int>("PersonelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MedyaId");
 
                     b.HasIndex("PersonelId");
 
@@ -149,18 +141,24 @@ namespace PersonelKayit.Migrations
                         .WithMany("Personels")
                         .HasForeignKey("LokasyonId");
 
-                    b.HasOne("PersonelKayit.Models.PersonelMedya", null)
-                        .WithMany("Personels")
-                        .HasForeignKey("PersonelMedyaId");
-
                     b.Navigation("Lokasyon");
                 });
 
             modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
                 {
+                    b.HasOne("PersonelKayit.Models.MedyaKutuphanesi", "MedyaKutuphanesi")
+                        .WithMany("PersonelMedyalar")
+                        .HasForeignKey("MedyaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PersonelKayit.Models.Personel", "Personel")
                         .WithMany()
-                        .HasForeignKey("PersonelId");
+                        .HasForeignKey("PersonelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedyaKutuphanesi");
 
                     b.Navigation("Personel");
                 });
@@ -170,9 +168,9 @@ namespace PersonelKayit.Migrations
                     b.Navigation("Personels");
                 });
 
-            modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
+            modelBuilder.Entity("PersonelKayit.Models.MedyaKutuphanesi", b =>
                 {
-                    b.Navigation("Personels");
+                    b.Navigation("PersonelMedyalar");
                 });
 #pragma warning restore 612, 618
         }

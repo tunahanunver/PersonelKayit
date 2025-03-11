@@ -58,18 +58,11 @@ namespace PersonelKayit.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MedyaGuid")
+                    b.Property<string>("MedyaURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PersonelMedyaId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonelMedyaId")
-                        .IsUnique()
-                        .HasFilter("[PersonelMedyaId] IS NOT NULL");
 
                     b.ToTable("MedyaKutuphaneleri");
                 });
@@ -124,27 +117,19 @@ namespace PersonelKayit.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MedyaId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("PersonelId")
+                    b.Property<int>("PersonelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MedyaId");
+
                     b.HasIndex("PersonelId");
 
                     b.ToTable("PersonelMedyalari");
-                });
-
-            modelBuilder.Entity("PersonelKayit.Models.MedyaKutuphanesi", b =>
-                {
-                    b.HasOne("PersonelKayit.Models.PersonelMedya", "PersonelMedya")
-                        .WithOne("MedyaKutuphanesi")
-                        .HasForeignKey("PersonelKayit.Models.MedyaKutuphanesi", "PersonelMedyaId");
-
-                    b.Navigation("PersonelMedya");
                 });
 
             modelBuilder.Entity("PersonelKayit.Models.Personel", b =>
@@ -158,9 +143,19 @@ namespace PersonelKayit.Migrations
 
             modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
                 {
+                    b.HasOne("PersonelKayit.Models.MedyaKutuphanesi", "MedyaKutuphanesi")
+                        .WithMany("PersonelMedyalar")
+                        .HasForeignKey("MedyaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PersonelKayit.Models.Personel", "Personel")
                         .WithMany()
-                        .HasForeignKey("PersonelId");
+                        .HasForeignKey("PersonelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedyaKutuphanesi");
 
                     b.Navigation("Personel");
                 });
@@ -170,9 +165,9 @@ namespace PersonelKayit.Migrations
                     b.Navigation("Personels");
                 });
 
-            modelBuilder.Entity("PersonelKayit.Models.PersonelMedya", b =>
+            modelBuilder.Entity("PersonelKayit.Models.MedyaKutuphanesi", b =>
                 {
-                    b.Navigation("MedyaKutuphanesi");
+                    b.Navigation("PersonelMedyalar");
                 });
 #pragma warning restore 612, 618
         }

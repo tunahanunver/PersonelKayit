@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonelKayit.Models;
 
@@ -12,17 +13,23 @@ namespace PersonelKayit.Controllers
         {
             _context = context;
         }
+
         public async Task<IActionResult> Index()
         {
             var model = await _context.PersonelMedyalari
                 .Include(p => p.Personel)
+                .Include(p => p.MedyaKutuphanesi)
                 .ToListAsync();
             return View(model);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var pMedia = await _context.PersonelMedyalari.FindAsync(id);
+            var pMedia = await _context.PersonelMedyalari
+                .Include(p => p.Personel)
+                .Include(p => p.MedyaKutuphanesi)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pMedia == null)
             {
                 return NotFound();
@@ -30,12 +37,13 @@ namespace PersonelKayit.Controllers
             return View(pMedia);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Personeller = new SelectList(await _context.Personeller.ToListAsync(), "Id", "Ad");
+            ViewBag.Medyalar = new SelectList(await _context.MedyaKutuphaneleri.ToListAsync(), "Id", "MedyaAdi");
             return View();
         }
 
-        // POST: Lokasyon/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PersonelMedya personelMedya)
@@ -46,6 +54,9 @@ namespace PersonelKayit.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Personeller = new SelectList(await _context.Personeller.ToListAsync(), "Id", "Ad");
+            ViewBag.Medyalar = new SelectList(await _context.MedyaKutuphaneleri.ToListAsync(), "Id", "MedyaAdi");
             return View(personelMedya);
         }
 
@@ -56,10 +67,12 @@ namespace PersonelKayit.Controllers
             {
                 return NotFound();
             }
-            return View();
+
+            ViewBag.Personeller = new SelectList(await _context.Personeller.ToListAsync(), "Id", "Ad");
+            ViewBag.Medyalar = new SelectList(await _context.MedyaKutuphaneleri.ToListAsync(), "Id", "MedyaAdi");
+            return View(pMedya);
         }
 
-        // POST: Lokasyon/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, PersonelMedya personelMedya)
@@ -89,12 +102,19 @@ namespace PersonelKayit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Personeller = new SelectList(await _context.Personeller.ToListAsync(), "Id", "Ad");
+            ViewBag.Medyalar = new SelectList(await _context.MedyaKutuphaneleri.ToListAsync(), "Id", "MedyaAdi");
             return View(personelMedya);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var pMedya = await _context.PersonelMedyalari.FindAsync(id);
+            var pMedya = await _context.PersonelMedyalari
+                .Include(p => p.Personel)
+                .Include(p => p.MedyaKutuphanesi)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pMedya == null)
             {
                 return NotFound();
@@ -102,7 +122,6 @@ namespace PersonelKayit.Controllers
             return View(pMedya);
         }
 
-        // POST: Lokasyon/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

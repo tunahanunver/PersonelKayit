@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PersonelKayit.Models
 {
@@ -8,18 +7,14 @@ namespace PersonelKayit.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Media adı zorunludur")]
-        [Display(Name = "Media Adı")]
+        [Required(ErrorMessage = "Medya adı zorunludur")]
+        [Display(Name = "Medya Adı")]
         public string? MedyaAdi { get; set; }
 
-        [Required(ErrorMessage = "Media GUID zorunludur")]
-        [Display(Name = "Media GUID")]
-        public string? MedyaGuid { get; set; }
+        [Required(ErrorMessage = "Medya URL zorunludur")]
+        [Display(Name = "Medya URL")]
+        public string? MedyaURL { get; set; }
 
-        [Display(Name = "Personel Media ID")]
-        public int? PersonelMedyaId { get; set; }
-
-        [ForeignKey("PersonelMedyaId")]
-        public PersonelMedya? PersonelMedya { get; set; }
+        public ICollection<PersonelMedya>? PersonelMedyalar { get; set; }
     }
 }

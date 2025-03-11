@@ -90,10 +90,10 @@
 								{
 									<div class="col-md-3 mb-2">
 										<div class="card">
-											<img src="~/MedyaKutuphanesi/@medya.Name" class="card-img-top" alt="Resim">
+											<img src="~/MedyaKutuphanesi/@medya.MedyaKutuphanesi?.MedyaURL" class="card-img-top" alt="Resim">
 											<div class="card-body p-2">
 												<div class="d-flex justify-content-between">
-													<small class="text-muted">@medya.Name</small>
+													<small class="text-muted">@medya.MedyaKutuphanesi?.MedyaAdi</small>
 													<button type="button" class="btn btn-sm btn-danger" onclick="deleteImage(@medya.Id)">
 														<i class="bi bi-trash"></i>
 													</button>
@@ -109,7 +109,7 @@
 							<label class="form-label">Yeni Resimler</label>
 							<input type="file" id="imageInput" name="Images" class="form-control" multiple accept="image/*" />
 							<small class="text-muted">Tek veya birden fazla resim seçebilirsiniz</small>
-							
+
 							<!-- Seçilen resimlerin önizlemesi -->
 							<div id="imagePreviewContainer" class="row mt-2">
 								<!-- JavaScript ile doldurulacak -->
@@ -140,38 +140,89 @@
 	}
 	<script>
 		$(document).ready(function() {
+            // Seçilen dosyaları tutacak dizi
+            let selectedFiles = [];
+            
 			// Resim önizleme işlemi
 			$('#imageInput').on('change', function() {
 				const files = this.files;
 				const previewContainer = $('#imagePreviewContainer');
-				
-				// Önizleme alanını temizle
-				previewContainer.empty();
-				
-				// Seçilen her resim için önizleme oluştur
+
+				// Yeni seçilen dosyaları diziye ekle
 				if (files && files.length > 0) {
 					for (let i = 0; i < files.length; i++) {
 						const file = files[i];
+                        selectedFiles.push(file);
+                        
 						const reader = new FileReader();
-						
+
 						reader.onload = function(e) {
 							const previewHtml = `
-								<div class="col-md-3 mb-2">
+								<div class="col-md-3 mb-2 image-preview" data-index="${selectedFiles.length - 1}">
 									<div class="card">
 										<img src="${e.target.result}" class="card-img-top" alt="Önizleme">
 										<div class="card-body p-2">
 											<small class="text-muted">${file.name}</small>
+											<button type="button" class="btn btn-sm btn-danger remove-image" data-index="${selectedFiles.length - 1}">
+												<i class="bi bi-trash"></i>
+											</button>
 										</div>
 									</div>
 								</div>
 							`;
 							previewContainer.append(previewHtml);
 						}
-						
+
 						reader.readAsDataURL(file);
 					}
 				}
+                
+                // Dosya girişini sıfırla, böylece aynı dosya tekrar seçilebilir
+                this.value = '';
 			});
+
+			// Resim silme işlemi
+			$(document).on('click', '.remove-image', function() {
+				const index = $(this).data('index');
+                selectedFiles.splice(index, 1);
+				$(this).closest('.image-preview').remove();
+                
+                // Kalan resimlerin indekslerini güncelle
+                $('.image-preview').each(function(i) {
+                    $(this).attr('data-index', i);
+                    $(this).find('.remove-image').attr('data-index', i);
+                });
+			});
+            
+            // Form gönderilmeden önce seçilen dosyaları FormData'ya ekle
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                // Mevcut Images dosyalarını temizle
+                formData.delete('Images');
+                
+                // Seçilen tüm dosyaları FormData'ya ekle
+                selectedFiles.forEach(file => {
+                    formData.append('Images', file);
+                });
+                
+                // Form verilerini manuel olarak gönder
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        window.location.href = '@Url.Action("Index", "Personel")';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Bir hata oluştu: ' + error);
+                    }
+                });
+            });
 
 			const sehirler = {
 				'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],

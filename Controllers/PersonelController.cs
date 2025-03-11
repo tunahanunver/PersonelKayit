@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Orleans.Runtime;
-using PersonelKayit.Migrations;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
@@ -76,6 +75,7 @@ namespace PersonelKayit.Controllers
 
             // Personelin medya bilgilerini getir
             var personelMedyalar = await _context.PersonelMedyalari
+                .Include(pm => pm.MedyaKutuphanesi)
                 .Where(pm => pm.PersonelId == id)
                 .ToListAsync();
 
@@ -161,8 +161,8 @@ namespace PersonelKayit.Controllers
                             if (image.Length > 0)
                             {
                                 string guidId = Guid.NewGuid().ToString();
-                                string fileExtension = Path.GetExtension(image.FileName);
-                                string newFileName = $"{guidId}{fileExtension}";
+                                string fileExtension = Path.GetFileNameWithoutExtension(image.FileName);
+                                string newFileName = $"{guidId}{image.FileName}";
                                 string klasor = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", newFileName);
 
                                 using (var stream = new FileStream(klasor, FileMode.Create))
@@ -170,32 +170,28 @@ namespace PersonelKayit.Controllers
                                     await image.CopyToAsync(stream);
                                 }
 
-                                // PersonelMedya oluştur
-                                var personelMedya = new PersonelMedya
-                                {
-                                    Name = newFileName,
-                                    PersonelId = personel.Id
-                                };
-
-                                _context.PersonelMedyalari.Add(personelMedya);
-                                await _context.SaveChangesAsync();
-
                                 // MedyaKutuphanesi oluştur
                                 var medyaKutuphanesi = new MedyaKutuphanesi
                                 {
-                                    MedyaAdi = image.FileName,
-                                    MedyaGuid = guidId,
-                                    PersonelMedyaId = personelMedya.Id
+                                    MedyaAdi = fileExtension,
+                                    MedyaURL = newFileName
                                 };
 
                                 _context.MedyaKutuphaneleri.Add(medyaKutuphanesi);
                                 await _context.SaveChangesAsync();
 
-                                // İlk resmi personel.Image olarak ayarla (eğer henüz ayarlanmamışsa)
-                                if (string.IsNullOrEmpty(personel.Image))
+                                // PersonelMedya oluştur
+                                var personelMedya = new PersonelMedya
                                 {
-                                    personel.Image = newFileName;
-                                }
+                                    PersonelId = personel.Id,
+                                    MedyaId = medyaKutuphanesi.Id
+                                };
+
+                                _context.PersonelMedyalari.Add(personelMedya);
+                                await _context.SaveChangesAsync();
+
+                                // Her zaman son eklenen resmi personel.Image olarak ayarla
+                                personel.Image = newFileName;
                             }
                         }
                     }
@@ -229,6 +225,7 @@ namespace PersonelKayit.Controllers
 
             // Personelin medya bilgilerini getir
             var personelMedyalar = await _context.PersonelMedyalari
+                .Include(pm => pm.MedyaKutuphanesi)
                 .Where(pm => pm.PersonelId == id)
                 .ToListAsync();
 
@@ -311,8 +308,8 @@ namespace PersonelKayit.Controllers
                             if (image.Length > 0)
                             {
                                 string guidId = Guid.NewGuid().ToString();
-                                string fileExtension = Path.GetExtension(image.FileName);
-                                string newFileName = $"{guidId}{fileExtension}";
+                                string fileExtension = Path.GetFileNameWithoutExtension(image.FileName);
+                                string newFileName = $"{guidId}{image.FileName}";
                                 string klasor = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", newFileName);
 
                                 using (var stream = new FileStream(klasor, FileMode.Create))
@@ -320,32 +317,28 @@ namespace PersonelKayit.Controllers
                                     await image.CopyToAsync(stream);
                                 }
 
-                                // PersonelMedya oluştur
-                                var personelMedya = new PersonelMedya
-                                {
-                                    Name = newFileName,
-                                    PersonelId = personel.Id
-                                };
-
-                                _context.PersonelMedyalari.Add(personelMedya);
-                                await _context.SaveChangesAsync();
-
                                 // MedyaKutuphanesi oluştur
                                 var medyaKutuphanesi = new MedyaKutuphanesi
                                 {
-                                    MedyaAdi = image.FileName,
-                                    MedyaGuid = guidId,
-                                    PersonelMedyaId = personelMedya.Id
+                                    MedyaAdi = fileExtension,
+                                    MedyaURL = newFileName
                                 };
 
                                 _context.MedyaKutuphaneleri.Add(medyaKutuphanesi);
                                 await _context.SaveChangesAsync();
 
-                                // İlk resmi personel.Image olarak ayarla (eğer henüz ayarlanmamışsa)
-                                if (string.IsNullOrEmpty(personel.Image))
+                                // PersonelMedya oluştur
+                                var personelMedya = new PersonelMedya
                                 {
-                                    personel.Image = newFileName;
-                                }
+                                    PersonelId = personel.Id,
+                                    MedyaId = medyaKutuphanesi.Id
+                                };
+
+                                _context.PersonelMedyalari.Add(personelMedya);
+                                await _context.SaveChangesAsync();
+
+                                // Her zaman son eklenen resmi personel.Image olarak ayarla
+                                personel.Image = newFileName;
                             }
                         }
                     }
@@ -382,6 +375,7 @@ namespace PersonelKayit.Controllers
 
             // Personelin medya bilgilerini getir
             var personelMedyalar = await _context.PersonelMedyalari
+                .Include(pm => pm.MedyaKutuphanesi)
                 .Where(pm => pm.PersonelId == id)
                 .ToListAsync();
 
@@ -428,27 +422,25 @@ namespace PersonelKayit.Controllers
             foreach (var personelMedya in personelMedyalar)
             {
                 // MedyaKutuphanesi bilgilerini getir
-                var medyaKutuphanesi = await _context.MedyaKutuphaneleri
-                    .FirstOrDefaultAsync(mk => mk.PersonelMedyaId == personelMedya.Id);
-
-                if (medyaKutuphanesi != null)
+                var medya = await _context.MedyaKutuphaneleri.FindAsync(personelMedya.MedyaId);
+                if (medya != null)
                 {
+                    // Dosya sisteminden resmi sil
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", medya.MedyaURL);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        catch (Exception)
+                        {
+                            // Dosya silinirken hata oluşursa devam et
+                        }
+                    }
+
                     // MedyaKutuphanesi kaydını sil
-                    _context.MedyaKutuphaneleri.Remove(medyaKutuphanesi);
-                }
-
-                // Dosya sisteminden resmi sil
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", personelMedya.Name);
-                if (System.IO.File.Exists(filePath))
-                {
-                    try
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                    catch (Exception)
-                    {
-                        // Dosya silinirken hata oluşursa devam et
-                    }
+                    _context.MedyaKutuphaneleri.Remove(medya);
                 }
 
                 // PersonelMedya kaydını sil
@@ -472,7 +464,9 @@ namespace PersonelKayit.Controllers
             try
             {
                 // PersonelMedya bilgilerini getir
-                var personelMedya = await _context.PersonelMedyalari.FindAsync(id);
+                var personelMedya = await _context.PersonelMedyalari
+                    .Include(pm => pm.MedyaKutuphanesi)
+                    .FirstOrDefaultAsync(pm => pm.Id == id);
                 
                 if (personelMedya == null)
                 {
@@ -483,32 +477,39 @@ namespace PersonelKayit.Controllers
                 var personel = await _context.Personeller.FindAsync(personelMedya.PersonelId);
                 
                 // MedyaKutuphanesi bilgilerini getir
-                var medyaKutuphanesi = await _context.MedyaKutuphaneleri
-                    .FirstOrDefaultAsync(mk => mk.PersonelMedyaId == personelMedya.Id);
+                var medyaKutuphanesi = personelMedya.MedyaKutuphanesi;
                 
                 if (medyaKutuphanesi != null)
                 {
+                    // Dosya sisteminden resmi sil
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", medyaKutuphanesi.MedyaURL);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        catch (Exception)
+                        {
+                            // Dosya silinirken hata oluşursa devam et
+                        }
+                    }
+
                     // MedyaKutuphanesi kaydını sil
                     _context.MedyaKutuphaneleri.Remove(medyaKutuphanesi);
                 }
                 
                 // Eğer silinen resim, personelin ana resmi ise başka bir resmi ana resim yap
-                if (personel != null && personel.Image == personelMedya.Name)
+                if (personel != null && personel.Image == medyaKutuphanesi?.MedyaURL)
                 {
                     // Başka bir resim varsa onu ana resim yap, yoksa null yap
                     var otherMedya = await _context.PersonelMedyalari
+                        .Include(pm => pm.MedyaKutuphanesi)
                         .Where(pm => pm.PersonelId == personel.Id && pm.Id != personelMedya.Id)
                         .FirstOrDefaultAsync();
                     
-                    personel.Image = otherMedya?.Name;
+                    personel.Image = otherMedya?.MedyaKutuphanesi?.MedyaURL;
                     _context.Update(personel);
-                }
-                
-                // Dosya sisteminden resmi sil
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "MedyaKutuphanesi", personelMedya.Name);
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
                 }
                 
                 // PersonelMedya kaydını sil
