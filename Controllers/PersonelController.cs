@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -6,6 +7,7 @@ using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
 {
+    [Authorize]
     public class PersonelController : Controller
     {
         private readonly PersonelDbContext _context;

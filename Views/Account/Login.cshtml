@@ -1,0 +1,66 @@
+﻿@model PersonelKayit.Models.ViewModels.Login
+
+@{
+	ViewData["Title"] = "Giriş Yap";
+	ViewData["HideNavItems"] = true;
+}
+
+<div class="container mt-4">
+	<div class="d-flex justify-content-center align-items-center mb-4">
+		<h1>Giriş Yap</h1>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<form asp-controller="Account" asp-action="Login" method="post">
+						<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+						<div class="mb-3">
+							<label asp-for="Username" class="form-label">Kullanıcı Adı</label>
+							<input asp-for="Username" class="form-control" placeholder="civciv1" />
+							<span asp-validation-for="Username" class="text-danger"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Password" class="form-label">Şifre</label>
+							<div class="input-group">
+								<input asp-for="Password" class="form-control" />
+							</div>
+							<span asp-validation-for="Password" class="text-danger"></span>
+						</div>
+
+						<div class="mb-3">
+							<div class="form-check">
+								<input asp-for="RememberMe" class="form-check-input" />
+								<label asp-for="RememberMe" class="form-check-label">Beni Hatırla</label>
+							</div>
+						</div>
+
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn btn-primary">
+								<i class="bi bi-box-arrow-in-right"></i> Giriş Yap
+							</button>
+						</div>
+
+						<hr class="my-4">
+
+						<div class="text-center">
+							<p class="mb-0">
+								Hesabınız yok mu?
+								<a asp-controller="Account" asp-action="Register" class="text-primary text-decoration-none">Kayıt Olun</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

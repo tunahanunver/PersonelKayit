@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
 {
+    [Authorize]
     public class LokasyonController : Controller
     {
         private readonly PersonelDbContext _context;

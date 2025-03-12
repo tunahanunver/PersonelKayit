@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace PersonelKayit.Models
 {
-    public class PersonelDbContext : DbContext
+    public class PersonelDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Personel> Personeller { get; set; }
         public DbSet<Lokasyon> Lokasyonlar { get; set; }

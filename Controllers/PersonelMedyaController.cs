@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers
 {
+    [Authorize]
     public class PersonelMedyaController : Controller
     {
         private readonly PersonelDbContext _context;
