@@ -17,6 +17,12 @@ namespace PersonelKayit.Models.ViewModels
         [EmailAddress(ErrorMessage = "Geçerli bir Email Adresi giriniz")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Telefon numarası zorunludur")]
+        [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz")]
+        [Display(Name = "Telefon Numarası")]
+        [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Telefon numarası 10 haneli olmalıdır")]
+        public string PhoneNumber { get; set; }
+
         [Required(ErrorMessage = "Şifre zorunludur")]
         [DataType(DataType.Password)]
         [MinLength(6, ErrorMessage = "Şifre en az 6 karakter olmalıdır")]

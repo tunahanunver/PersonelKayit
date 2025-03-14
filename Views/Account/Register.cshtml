@@ -43,6 +43,12 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="5xxxxxxxxx" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Password" class="form-label">Şifre</label>
@@ -82,4 +88,18 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $(document).ready(function () {
+            // Sadece rakam girilmesine izin ver
+            $('#PhoneNumber').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // 10 karakterden fazla girilmesini engelle
+            $('#PhoneNumber').on('keypress', function () {
+                if (this.value.length >= 10) return false;
+            });
+        });
+    </script>
 }
