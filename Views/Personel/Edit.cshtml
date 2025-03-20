@@ -116,6 +116,61 @@
 							</div>
 						</div>
 
+						<div class="card mb-4">
+							<div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+								<h5 class="mb-0">Eğitim Bilgileri</h5>
+								<button type="button" id="addEducation" class="btn btn-sm btn-light">
+									<i class="bi bi-plus"></i> Eğitim Ekle
+								</button>
+							</div>
+							<div class="card-body">
+								<div id="educationContainer">
+									@if (Model.Egitimler != null && Model.Egitimler.Any())
+									{
+										@for (int i = 0; i < Model.Egitimler.Count; i++)
+										{
+											<div class="education-form mb-3 border-bottom pb-3">
+												<div class="row">
+													<div class="col-md-6 mb-3">
+														<label class="form-label">Okul Adı</label>
+														<input name="Egitimler[@i].OkulAdi" class="form-control" value="@Model.Egitimler.ElementAt(i).OkulAdi" required />
+													</div>
+													<div class="col-md-6 mb-3">
+														<label class="form-label">Bölüm</label>
+														<input name="Egitimler[@i].Bolum" class="form-control" value="@Model.Egitimler.ElementAt(i).Bolum" required />
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6 mb-3">
+														<label class="form-label">Mezuniyet Tarihi</label>
+														<input name="Egitimler[@i].MezuniyetTarihi" class="form-control mezuniyet-tarihi" type="date"
+															   value="@(Model.Egitimler.ElementAt(i).MezuniyetTarihi?.ToString("yyyy-MM-dd"))"
+														@(Model.Egitimler.ElementAt(i).DevamEdiyor ? "disabled" : "") />
+													</div>
+													<div class="col-md-6 mb-3">
+														<div class="form-check mt-4">
+															<input name="Egitimler[@i].DevamEdiyor" class="form-check-input devam-ediyor" type="checkbox" id="devamEdiyor_@i"
+																   @(Model.Egitimler.ElementAt(i).DevamEdiyor ? "checked" : "") />
+															<input name="Egitimler[@i].DevamEdiyor" type="hidden" id="devamEdiyorHidden_@i" value="@(Model.Egitimler.ElementAt(i).DevamEdiyor ? "true" : "false")" />
+															<label class="form-check-label" for="devamEdiyor_@i">Devam Ediyor</label>
+														</div>
+													</div>
+												</div>
+												@if (i > 0)
+												{
+													<div class="text-end">
+														<button type="button" class="btn btn-sm btn-danger remove-education">
+															<i class="bi bi-trash"></i> Kaldır
+														</button>
+													</div>
+												}
+											</div>
+										}
+									}
+								</div>
+							</div>
+						</div>
+
 						<div class="mb-3">
 							<label asp-for="Aciklama" class="form-label"></label>
 							<textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
@@ -198,16 +253,61 @@
             $('form').on('submit', function(e) {
                 e.preventDefault();
                 
-                const formData = new FormData(this);
-                
-                // Mevcut Images dosyalarını temizle
-                formData.delete('Images');
-                
-                // Seçilen tüm dosyaları FormData'ya ekle
-                selectedFiles.forEach(file => {
-                    formData.append('Images', file);
+                // Eğitim formlarını temizle - boş olanları kaldır
+                $('.education-form').each(function() {
+                    const okulAdi = $(this).find('input[name$="OkulAdi"]').val();
+                    const bolum = $(this).find('input[name$="Bolum"]').val();
+                    
+                    if (!okulAdi || !bolum) {
+                        $(this).remove();
+                    }
                 });
-                
+
+                // Eğitim formlarının indekslerini düzelt
+                $('.education-form').each(function(newIndex) {
+                    $(this).find('input, select').each(function() {
+                        const name = $(this).attr('name');
+                        if (name && name.includes('Egitimler[')) {
+                            const newName = name.replace(/Egitimler\[\d+\]/g, `Egitimler[${newIndex}]`);
+                            $(this).attr('name', newName);
+                        }
+                    });
+                });
+
+                const formData = new FormData(this);
+
+                // DevamEdiyor çift input sorununu gider
+                $('.education-form').each(function(index) {
+                    const devamEdiyorChecked = $(this).find('input[type="checkbox"].devam-ediyor').is(':checked');
+                    formData.delete(`Egitimler[${index}].DevamEdiyor`); // Tüm değerleri temizle
+                    formData.append(`Egitimler[${index}].DevamEdiyor`, devamEdiyorChecked ? 'true' : 'false');
+                    
+                    // DevamEdiyor işaretliyse mezuniyet tarihini kaldır
+                    if (devamEdiyorChecked) {
+                        formData.delete(`Egitimler[${index}].MezuniyetTarihi`);
+                    }
+                });
+
+                // Form verilerini sıralı şekilde konsola yazdır (debug için)
+                console.log("--------- FORM VERİLERİ GÖNDERME BAŞLIYOR ---------");
+                const formDataObj = {};
+                for (let [key, value] of formData.entries()) {
+                    formDataObj[key] = value;
+                    console.log(`${key}: ${value instanceof File ? "File: " + value.name : value}`);
+                }
+                console.log("Eğitim Sayısı: ", $('.education-form').length);
+
+                // Eğitim alanlarının detaylı dökümü
+                console.log("----- Eğitim Alanları Dökümü -----");
+                $('.education-form').each(function(index) {
+                    console.log(`Eğitim[${index}]:`, {
+                        "OkulAdi": $(this).find('input[name$="OkulAdi"]').val(),
+                        "Bolum": $(this).find('input[name$="Bolum"]').val(),
+                        "MezuniyetTarihi": $(this).find('input[name$="MezuniyetTarihi"]').val(),
+                        "DevamEdiyor": $(this).find('input[type="checkbox"].devam-ediyor').is(':checked')
+                    });
+                });
+
                 // Form verilerini manuel olarak gönder
                 $.ajax({
                     url: $(this).attr('action'),
@@ -219,6 +319,7 @@
                         window.location.href = '@Url.Action("Index", "Personel")';
                     },
                     error: function(xhr, status, error) {
+                        console.error("Hata detayları:", xhr.responseText);
                         alert('Bir hata oluştu: ' + error);
                     }
                 });
@@ -336,6 +437,82 @@
 			sehirSelect.on('change', function() {
 				populateIlceler(this.value);
 			});
+		});
+
+				// Edit.cshtml'deki JavaScript kodlarına ekleyin (Scripts bölümüne)
+
+		// Sayfa yüklendiğinde eğitim formu yoksa bir tane ekle
+		$(document).ready(function() {
+			if ($('.education-form').length === 0) {
+				addEducationForm();
+			}
+
+			// Eğitim Ekle butonuna tıklandığında
+			$('#addEducation').click(function() {
+				addEducationForm();
+			});
+
+			// Eğitim formunu kaldırma
+			$(document).on('click', '.remove-education', function() {
+				$(this).closest('.education-form').remove();
+			});
+
+			// Devam ediyor işaretlendiğinde mezuniyet tarihini disable etme
+			$(document).on('change', '.devam-ediyor', function() {
+				const $this = $(this);
+				const dateInput = $this.closest('.education-form').find('.mezuniyet-tarihi');
+				const isChecked = $this.is(':checked');
+				const hiddenInput = $this.closest('.form-check').find('input[type="hidden"]');
+				
+				// Mezuniyet tarihini devre dışı bırak ve temizle
+				dateInput.prop('disabled', isChecked);
+				if (isChecked) {
+					dateInput.val('');
+				}
+				
+				// Hidden inputu güncelle - sadece geliştirici olarak bilgi amaçlı
+				// Asıl değer form gönderiminde JavaScript tarafından ayarlanıyor
+				hiddenInput.val(isChecked ? "true" : "false");
+				console.log("DevamEdiyor değişti:", isChecked, "Hidden input value:", hiddenInput.val());
+			});
+
+			// Eğitim formu ekleme fonksiyonu
+			function addEducationForm() {
+				var count = $('.education-form').length;
+				var template = `
+				<div class="education-form mb-3 border-bottom pb-3">
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Okul Adı</label>
+							<input name="Egitimler[${count}].OkulAdi" class="form-control" required />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Bölüm</label>
+							<input name="Egitimler[${count}].Bolum" class="form-control" required />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Mezuniyet Tarihi</label>
+							<input name="Egitimler[${count}].MezuniyetTarihi" class="form-control mezuniyet-tarihi" type="date" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<div class="form-check mt-4">
+								<input name="Egitimler[${count}].DevamEdiyor" class="form-check-input devam-ediyor" type="checkbox" id="devamEdiyor_${count}" />
+								<input name="Egitimler[${count}].DevamEdiyor" type="hidden" id="devamEdiyorHidden_${count}" value="false" />
+								<label class="form-check-label" for="devamEdiyor_${count}">Devam Ediyor</label>
+							</div>
+						</div>
+					</div>
+					<div class="text-end">
+						<button type="button" class="btn btn-sm btn-danger remove-education">
+							<i class="bi bi-trash"></i> Kaldır
+						</button>
+					</div>
+				</div>`;
+
+				$('#educationContainer').append(template);
+			}
 		});
 	</script>
 

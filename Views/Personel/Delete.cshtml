@@ -73,6 +73,57 @@
 					</div>
 				</dd>
 
+				<!-- Diğer personel bilgileri... -->
+
+				<div class="card mb-4">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0">Eğitim Bilgileri</h5>
+					</div>
+					<div class="card-body">
+						@if (Model.Egitimler != null && Model.Egitimler.Any())
+						{
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>Okul Adı</th>
+											<th>Bölüm</th>
+											<th>Mezuniyet Durumu</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var egitim in Model.Egitimler)
+										{
+											<tr>
+												<td>@egitim.OkulAdi</td>
+												<td>@egitim.Bolum</td>
+												<td>
+													@if (egitim.DevamEdiyor)
+													{
+														<span class="badge bg-primary">Devam Ediyor</span>
+													}
+													else if (egitim.MezuniyetTarihi.HasValue)
+													{
+														<span>@egitim.MezuniyetTarihi.Value.ToString("dd.MM.yyyy")</span>
+													}
+													else
+													{
+														<span>-</span>
+													}
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						}
+						else
+						{
+							<p class="text-muted">Eğitim bilgisi bulunmamaktadır.</p>
+						}
+					</div>
+				</div>
+
 				<dt class="col-sm-3">Açıklama</dt>
 				<dd class="col-sm-9">@Model.Aciklama</dd>
 			</dl>

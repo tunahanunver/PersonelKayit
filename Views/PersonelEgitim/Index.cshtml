@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PersonelKayit.Models.PersonelEgitim>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="container mt-4">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1>Personel Eğitim</h1>
+	</div>
+
+	<div class="card shadow-sm">
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th>
+								@Html.DisplayNameFor(model => model.Id)
+							</th>
+							<th>
+								@Html.DisplayNameFor(model => model.PersonelId)
+							</th>
+							<th>
+								@Html.DisplayNameFor(model => model.OkulAdi)
+							</th>
+							<th>
+								@Html.DisplayNameFor(model => model.Bolum)
+							</th>
+							<th>
+								@Html.DisplayNameFor(model => model.MezuniyetTarihi)
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+								<td>
+									@item.Id
+								</td>
+								<td>
+									@item.PersonelId
+								</td>
+								<td>
+									@item.OkulAdi
+								</td>
+								<td>
+									@item.Bolum
+								</td>
+								<td>
+									@if (item.DevamEdiyor)
+									{
+										<span class="badge bg-primary">Devam Ediyor</span>
+									}
+									else if (item.MezuniyetTarihi.HasValue)
+									{
+										<span>@item.MezuniyetTarihi.Value.ToString("dd.MM.yyyy")</span>
+									}
+									else
+									{
+										<span>-</span>
+									}
+								</td>
+								<td class="text-end">
+									<div class="btn-group" role="group">
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Styles {
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}

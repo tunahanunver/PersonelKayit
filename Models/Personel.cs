@@ -57,6 +57,8 @@ namespace PersonelKayit.Models
         [NotMapped]
         public List<PersonelMedya> Medyalar { get; set; } = new List<PersonelMedya>();
 
+        public ICollection<PersonelEgitim> Egitimler { get; set; } = new List<PersonelEgitim>();
+
         // Personel hakkında ek bilgiler
         [Display(Name = "Açıklama")]
         [DataType(DataType.MultilineText)]

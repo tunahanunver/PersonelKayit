@@ -9,6 +9,7 @@ namespace PersonelKayit.Models
         public DbSet<Lokasyon> Lokasyonlar { get; set; }
         public DbSet<PersonelMedya> PersonelMedyalari { get; set; }
         public DbSet<MedyaKutuphanesi> MedyaKutuphaneleri { get; set; }
+        public DbSet<PersonelEgitim> PersonelEgitimleri { get; set; }
 
         public PersonelDbContext(DbContextOptions<PersonelDbContext> options)
             : base(options)
@@ -31,6 +32,13 @@ namespace PersonelKayit.Models
                 .HasOne(pm => pm.MedyaKutuphanesi)
                 .WithMany(mk => mk.PersonelMedyalar)
                 .HasForeignKey(pm => pm.MedyaId);
+
+            // PersonelEgitim - Personel ilişkisi
+            modelBuilder.Entity<PersonelEgitim>()
+                .HasOne(pe => pe.Personel)
+                .WithMany(pe => pe.Egitimler)
+                .HasForeignKey(pe => pe.PersonelId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

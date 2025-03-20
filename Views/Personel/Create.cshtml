@@ -1,287 +1,440 @@
 @model PersonelKayit.Models.Personel
 
 @{
-    ViewData["Title"] = "Yeni Personel Ekle";
+	ViewData["Title"] = "Yeni Personel Ekle";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Yeni Personel Ekle</h1>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Listeye Dön
-        </a>
-    </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1>Yeni Personel Ekle</h1>
+		<a asp-action="Index" class="btn btn-secondary">
+			<i class="bi bi-arrow-left"></i> Listeye Dön
+		</a>
+	</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form asp-action="Create" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Ad" class="form-label"></label>
-                                <input asp-for="Ad" class="form-control" />
-                                <span asp-validation-for="Ad" class="text-danger"></span>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Soyad" class="form-label"></label>
-                                <input asp-for="Soyad" class="form-control" />
-                                <span asp-validation-for="Soyad" class="text-danger"></span>
-                            </div>
-                        </div>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<form asp-action="Create" enctype="multipart/form-data">
+						<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DogumTarihi" class="form-label"></label>
-                                <input asp-for="DogumTarihi" class="form-control" type="date" />
-                                <span asp-validation-for="DogumTarihi" class="text-danger"></span>
-                            </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label asp-for="Ad" class="form-label"></label>
+								<input asp-for="Ad" class="form-control" />
+								<span asp-validation-for="Ad" class="text-danger"></span>
+							</div>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Cinsiyet" class="form-label"></label>
-                                <select asp-for="Cinsiyet" class="form-select">
-                                    <option value="">Seçiniz</option>
-                                    <option value="Erkek">Erkek</option>
-                                    <option value="Kadın">Kadın</option>
-                                </select>
-                                <span asp-validation-for="Cinsiyet" class="text-danger"></span>
-                            </div>
-                        </div>
+							<div class="col-md-6 mb-3">
+								<label asp-for="Soyad" class="form-label"></label>
+								<input asp-for="Soyad" class="form-control" />
+								<span asp-validation-for="Soyad" class="text-danger"></span>
+							</div>
+						</div>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Ülke</label>
-                                <select name="ulke" class="form-select" id="ulkeSelect" required>
-                                    <option value="">Seçiniz</option>
-                                    <option value="Türkiye">Türkiye</option>
-                                    <option value="Almanya">Almanya</option>
-                                    <option value="İngiltere">İngiltere</option>
-                                    <option value="Fransa">Fransa</option>
-                                    <option value="İtalya">İtalya</option>
-                                </select>
-                            </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label asp-for="DogumTarihi" class="form-label"></label>
+								<input asp-for="DogumTarihi" class="form-control" type="date" />
+								<span asp-validation-for="DogumTarihi" class="text-danger"></span>
+							</div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Şehir</label>
-                                <select name="sehir" class="form-select" id="sehirSelect" disabled required>
-                                    <option value="">Önce ülke seçiniz</option>
-                                </select>
-                            </div>
+							<div class="col-md-6 mb-3">
+								<label asp-for="Cinsiyet" class="form-label"></label>
+								<select asp-for="Cinsiyet" class="form-select">
+									<option value="">Seçiniz</option>
+									<option value="Erkek">Erkek</option>
+									<option value="Kadın">Kadın</option>
+								</select>
+								<span asp-validation-for="Cinsiyet" class="text-danger"></span>
+							</div>
+						</div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">İlçe</label>
-                                <select name="ilce" class="form-select" id="ilceSelect" disabled required>
-                                    <option value="">Önce şehir seçiniz</option>
-                                </select>
-                            </div>
-                        </div>
+						<div class="row">
+							<div class="col-md-4 mb-3">
+								<label class="form-label">Ülke</label>
+								<select name="ulke" class="form-select" id="ulkeSelect" required>
+									<option value="">Seçiniz</option>
+									<option value="Türkiye">Türkiye</option>
+									<option value="Almanya">Almanya</option>
+									<option value="İngiltere">İngiltere</option>
+									<option value="Fransa">Fransa</option>
+									<option value="İtalya">İtalya</option>
+								</select>
+							</div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Resimler</label>
-                            <input type="file" id="imageInput" name="Images" class="form-control" multiple accept="image/*" />
-                            <small class="text-muted">Tek veya birden fazla resim seçebilirsiniz</small>
-                            
-                            <!-- Seçilen resimlerin önizlemesi -->
-                            <div id="imagePreviewContainer" class="row mt-2">
-                                <!-- JavaScript ile doldurulacak -->
-                            </div>
-                        </div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label">Şehir</label>
+								<select name="sehir" class="form-select" id="sehirSelect" disabled required>
+									<option value="">Önce ülke seçiniz</option>
+								</select>
+							</div>
 
-                        <div class="mb-3">
-                            <label asp-for="Aciklama" class="form-label"></label>
-                            <textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="Aciklama" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Kaydet
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label">İlçe</label>
+								<select name="ilce" class="form-select" id="ilceSelect" disabled required>
+									<option value="">Önce şehir seçiniz</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Resimler</label>
+							<input type="file" id="imageInput" name="Images" class="form-control" multiple accept="image/*" />
+							<small class="text-muted">Tek veya birden fazla resim seçebilirsiniz</small>
+
+							<!-- Seçilen resimlerin önizlemesi -->
+							<div id="imagePreviewContainer" class="row mt-2">
+								<!-- JavaScript ile doldurulacak -->
+							</div>
+						</div>
+
+						<div class="card mb-4">
+							<div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+								<h5 class="mb-0">Eğitim Bilgileri</h5>
+								<button type="button" id="addEducation" class="btn btn-sm btn-light">
+									<i class="bi bi-plus"></i> Eğitim Ekle
+								</button>
+							</div>
+							<div class="card-body">
+								<div id="educationContainer">
+									<!-- İlk eğitim formu -->
+								</div>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Aciklama" class="form-label"></label>
+							<textarea asp-for="Aciklama" class="form-control" rows="4"></textarea>
+							<span asp-validation-for="Aciklama" class="text-danger"></span>
+						</div>
+
+						<div class="d-flex justify-content-end">
+							<button type="submit" class="btn btn-primary">
+								<i class="bi bi-check-circle"></i> Kaydet
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        $(document).ready(function() {
-            // Seçilen dosyaları tutacak dizi
-            let selectedFiles = [];
-            
-            // Resim önizleme işlemi
-            $('#imageInput').on('change', function() {
-                const files = this.files;
-                const previewContainer = $('#imagePreviewContainer');
-                
-                // Yeni seçilen dosyaları diziye ekle
-                if (files && files.length > 0) {
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        selectedFiles.push(file);
-                        
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            const previewHtml = `
-                                <div class="col-md-3 mb-2" data-index="${selectedFiles.length - 1}">
-                                    <div class="card">
-                                        <img src="${e.target.result}" class="card-img-top" alt="Önizleme">
-                                        <div class="card-body p-2">
-                                            <small class="text-muted">${file.name}</small>
-                                            <button type="button" class="btn btn-sm btn-danger remove-image" data-index="${selectedFiles.length - 1}">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            previewContainer.append(previewHtml);
-                        }
-                        
-                        reader.readAsDataURL(file);
-                    }
-                }
-                
-                // Dosya girişini sıfırla, böylece aynı dosya tekrar seçilebilir
-                this.value = '';
-            });
-            
-            // Resim silme işlemi
-            $(document).on('click', '.remove-image', function() {
-                const index = $(this).data('index');
-                selectedFiles.splice(index, 1);
-                $(this).closest('.col-md-3').remove();
-                
-                // Kalan resimlerin indekslerini güncelle
-                $('.col-md-3').each(function(i) {
-                    $(this).attr('data-index', i);
-                    $(this).find('.remove-image').attr('data-index', i);
-                });
-            });
-            
-            // Form gönderilmeden önce seçilen dosyaları FormData'ya ekle
-            $('form').on('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                
-                // Mevcut Images dosyalarını temizle
-                formData.delete('Images');
-                
-                // Seçilen tüm dosyaları FormData'ya ekle
-                selectedFiles.forEach(file => {
-                    formData.append('Images', file);
-                });
-                
-                // Form verilerini manuel olarak gönder
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        window.location.href = '@Url.Action("Index", "Personel")';
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Bir hata oluştu: ' + error);
-                    }
-                });
-            });
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		$(document).ready(function() {
+			const selectedFiles = [];
+			const previewContainer = $('#imagePreviewContainer');
 
-            // Ülke, şehir ve ilçe seçimleri için
-            const sehirler = {
-                'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
-                'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
-                'İngiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
-                'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
-                'İtalya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
-            };
+			// Dosya seçildiğinde
+			$('#imageInput').on('change', function(e) {
+				const files = this.files;
 
-            const ilceler = {
-                'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
-                'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
-                'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
-                'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
-                'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
-                'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
-                'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
-                'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
-                'Köln': ['Innenstadt', 'Rodenkirchen', 'Lindenthal', 'Ehrenfeld', 'Nippes'],
-                'Frankfurt': ['Innenstadt', 'Bockenheim', 'Sachsenhausen', 'Nordend', 'Westend'],
-                'Londra': ['Westminster', 'Camden', 'Greenwich', 'Hackney', 'Islington'],
-                'Manchester': ['City Centre', 'Ancoats', 'Chorlton', 'Didsbury', 'Fallowfield'],
-                'Birmingham': ['City Centre', 'Edgbaston', 'Moseley', 'Harborne', 'Selly Oak'],
-                'Liverpool': ['City Centre', 'Allerton', 'Aigburth', 'Childwall', 'Woolton'],
-                'Leeds': ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Horsforth'],
-                'Paris': ['Le Marais', 'Montmartre', 'Saint-Germain', 'Champs-Élysées', 'Bastille'],
-                'Marsilya': ['Vieux-Port', 'Le Panier', 'Noailles', 'Endoume', 'Bompard'],
-                'Lyon': ['Presqu\'île', 'Croix-Rousse', 'Guillotière', 'Vieux Lyon', 'Fourvière'],
-                'Toulouse': ['Capitole', 'Saint-Cyprien', 'Carmes', 'Saint-Michel', 'Minimes'],
-                'Nice': ['Vieux Nice', 'Cimiez', 'Gambetta', 'Liberation', 'Port'],
-                'Roma': ['Centro Storico', 'Trastevere', 'Testaccio', 'Prati', 'Monti'],
-                'Milano': ['Duomo', 'Navigli', 'Brera', 'Isola', 'Porta Romana'],
-                'Napoli': ['Centro Storico', 'Chiaia', 'Vomero', 'Posillipo', 'San Carlo'],
-                'Torino': ['Centro', 'San Salvario', 'Crocetta', 'Aurora', 'Lingotto'],
-                'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
-            };
+				// Yeni seçilen dosyaları diziye ekle
+				if (files && files.length > 0) {
+					for (let i = 0; i < files.length; i++) {
+						const file = files[i];
+						selectedFiles.push(file);
 
-            const ulkeSelect = $('#ulkeSelect');
-            const sehirSelect = $('#sehirSelect');
-            const ilceSelect = $('#ilceSelect');
+						const reader = new FileReader();
 
-            ulkeSelect.on('change', function() {
-                const selectedUlke = $(this).val();
-                sehirSelect.empty();
-                ilceSelect.empty().prop('disabled', true)
-                    .html('<option value="">Önce şehir seçiniz</option>');
+						reader.onload = function(e) {
+							const previewHtml = `
+								<div class="col-md-3 mb-2" data-index="${selectedFiles.length - 1}">
+									<div class="card">
+										<img src="${e.target.result}" class="card-img-top" alt="Önizleme">
+										<div class="card-body p-2">
+											<small class="text-muted">${file.name}</small>
+											<button type="button" class="btn btn-sm btn-danger remove-image" data-index="${selectedFiles.length - 1}">
+												<i class="bi bi-trash"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							`;
+							previewContainer.append(previewHtml);
+						}
 
-                if (selectedUlke && sehirler[selectedUlke]) {
-                    sehirSelect.prop('disabled', false);
-                    
-                    const options = ['<option value="">Şehir seçiniz</option>'];
-                    sehirler[selectedUlke].forEach(sehir => {
-                        options.push(`<option value="${sehir}">${sehir}</option>`);
-                    });
-                    
-                    sehirSelect.html(options.join(''));
-                } else {
-                    sehirSelect.prop('disabled', true)
-                        .html('<option value="">Önce ülke seçiniz</option>');
-                }
-            });
+						reader.readAsDataURL(file);
+					}
+				}
 
-            sehirSelect.on('change', function() {
-                const selectedSehir = $(this).val();
-                ilceSelect.empty();
+				// Dosya girişini sıfırla, böylece aynı dosya tekrar seçilebilir
+				this.value = '';
+			});
 
-                if (selectedSehir && ilceler[selectedSehir]) {
-                    ilceSelect.prop('disabled', false);
-                    
-                    const options = ['<option value="">İlçe seçiniz</option>'];
-                    ilceler[selectedSehir].forEach(ilce => {
-                        options.push(`<option value="${ilce}">${ilce}</option>`);
-                    });
-                    
-                    ilceSelect.html(options.join(''));
-                } else {
-                    ilceSelect.prop('disabled', true)
-                        .html('<option value="">Önce şehir seçiniz</option>');
-                }
-            });
-        });
-    </script>
+			// Resim silme işlemi
+			$(document).on('click', '.remove-image', function() {
+				const index = $(this).data('index');
+				selectedFiles.splice(index, 1);
+				$(this).closest('.col-md-3').remove();
+
+				// Kalan resimlerin indekslerini güncelle
+				$('.col-md-3').each(function(i) {
+					$(this).attr('data-index', i);
+					$(this).find('.remove-image').attr('data-index', i);
+				});
+			});
+
+			// Form gönderilmeden önce seçilen dosyaları FormData'ya ekle
+			$('form').on('submit', function(e) {
+				e.preventDefault();
+
+				// Eğitim formlarını temizle - boş olanları kaldır
+				$('.education-form').each(function() {
+					const okulAdi = $(this).find('input[name$="OkulAdi"]').val();
+					const bolum = $(this).find('input[name$="Bolum"]').val();
+					
+					if (!okulAdi || !bolum) {
+						$(this).remove();
+					}
+				});
+
+				// Eğitim formlarının indekslerini düzelt
+				$('.education-form').each(function(newIndex) {
+					$(this).find('input, select').each(function() {
+						const name = $(this).attr('name');
+						if (name && name.includes('Egitimler[')) {
+							const newName = name.replace(/Egitimler\[\d+\]/g, `Egitimler[${newIndex}]`);
+							$(this).attr('name', newName);
+						}
+					});
+				});
+
+				const formData = new FormData(this);
+
+				// DevamEdiyor çift input sorununu gider
+				$('.education-form').each(function(index) {
+					const devamEdiyorChecked = $(this).find('input[type="checkbox"].devam-ediyor').is(':checked');
+					formData.delete(`Egitimler[${index}].DevamEdiyor`); // Tüm değerleri temizle
+					formData.append(`Egitimler[${index}].DevamEdiyor`, devamEdiyorChecked ? 'true' : 'false');
+					
+					// DevamEdiyor işaretliyse mezuniyet tarihini kaldır
+					if (devamEdiyorChecked) {
+						formData.delete(`Egitimler[${index}].MezuniyetTarihi`);
+					}
+				});
+
+				// Mevcut Images dosyalarını temizle
+				formData.delete('Images');
+
+				// Seçilen tüm dosyaları FormData'ya ekle
+				selectedFiles.forEach(file => {
+					formData.append('Images', file);
+				});
+
+				// Form verilerini sıralı şekilde konsola yazdır (debug için)
+				console.log("--------- FORM VERİLERİ GÖNDERME BAŞLIYOR ---------");
+				const formDataObj = {};
+				for (let [key, value] of formData.entries()) {
+					formDataObj[key] = value;
+					console.log(`${key}: ${value instanceof File ? "File: " + value.name : value}`);
+				}
+				console.log("Eğitim Sayısı: ", $('.education-form').length);
+
+				// Eğitim alanlarının detaylı dökümü
+				console.log("----- Eğitim Alanları Dökümü -----");
+				$('.education-form').each(function(index) {
+					console.log(`Eğitim[${index}]:`, {
+						"OkulAdi": $(this).find('input[name$="OkulAdi"]').val(),
+						"Bolum": $(this).find('input[name$="Bolum"]').val(),
+						"MezuniyetTarihi": $(this).find('input[name$="MezuniyetTarihi"]').val(),
+						"DevamEdiyor": $(this).find('input[type="checkbox"].devam-ediyor').is(':checked')
+					});
+				});
+
+				// Form verilerini manuel olarak gönder
+				$.ajax({
+					url: $(this).attr('action'),
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function(response) {
+						window.location.href = '@Url.Action("Index", "Personel")';
+					},
+					error: function(xhr, status, error) {
+						console.error("Hata detayları:", xhr.responseText);
+						alert('Bir hata oluştu: ' + error);
+					}
+				});
+			});
+
+			// Ülke, şehir ve ilçe seçimleri için
+			const sehirler = {
+				'Türkiye': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya'],
+				'Almanya': ['Berlin', 'Hamburg', 'Münih', 'Köln', 'Frankfurt'],
+				'İngiltere': ['Londra', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
+				'Fransa': ['Paris', 'Marsilya', 'Lyon', 'Toulouse', 'Nice'],
+				'İtalya': ['Roma', 'Milano', 'Napoli', 'Torino', 'Floransa']
+			};
+
+			const ilceler = {
+				'Istanbul': ['Üsküdar', 'Kadiköy', 'Besiktas', 'Sisli', 'Beyoglu'],
+				'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Etimesgut'],
+				'Izmir': ['Konak', 'Karsiyaka', 'Bornova', 'Buca', 'Çigli'],
+				'Bursa': ['Osmangazi', 'Nilüfer', 'Yildirim', 'Gemlik', 'Mudanya'],
+				'Antalya': ['Muratpasa', 'Kepez', 'Konyaaltı', 'Manavgat', 'Alanya'],
+				'Berlin': ['Mitte', 'Kreuzberg', 'Charlottenburg', 'Spandau', 'Neukölln'],
+				'Hamburg': ['Altona', 'Bergedorf', 'Eimsbüttel', 'Nord', 'Wandsbek'],
+				'Münih': ['Altstadt', 'Schwabing', 'Maxvorstadt', 'Ludwigsvorstadt', 'Au-Haidhausen'],
+				'Köln': ['Innenstadt', 'Rodenkirchen', 'Lindenthal', 'Ehrenfeld', 'Nippes'],
+				'Frankfurt': ['Innenstadt', 'Bockenheim', 'Sachsenhausen', 'Nordend', 'Westend'],
+				'Londra': ['Westminster', 'Camden', 'Greenwich', 'Hackney', 'Islington'],
+				'Manchester': ['City Centre', 'Ancoats', 'Chorlton', 'Didsbury', 'Fallowfield'],
+				'Birmingham': ['City Centre', 'Edgbaston', 'Moseley', 'Harborne', 'Selly Oak'],
+				'Liverpool': ['City Centre', 'Allerton', 'Aigburth', 'Childwall', 'Woolton'],
+				'Leeds': ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Horsforth'],
+				'Paris': ['Le Marais', 'Montmartre', 'Saint-Germain', 'Champs-Élysées', 'Bastille'],
+				'Marsilya': ['Vieux-Port', 'Le Panier', 'Noailles', 'Endoume', 'Bompard'],
+				'Lyon': ['Presqu\'île', 'Croix-Rousse', 'Guillotière', 'Vieux Lyon', 'Fourvière'],
+				'Toulouse': ['Capitole', 'Saint-Cyprien', 'Carmes', 'Saint-Michel', 'Minimes'],
+				'Nice': ['Vieux Nice', 'Cimiez', 'Gambetta', 'Liberation', 'Port'],
+				'Roma': ['Centro Storico', 'Trastevere', 'Testaccio', 'Prati', 'Monti'],
+				'Milano': ['Duomo', 'Navigli', 'Brera', 'Isola', 'Porta Romana'],
+				'Napoli': ['Centro Storico', 'Chiaia', 'Vomero', 'Posillipo', 'San Carlo'],
+				'Torino': ['Centro', 'San Salvario', 'Crocetta', 'Aurora', 'Lingotto'],
+				'Floransa': ['Centro Storico', 'Santa Croce', 'San Marco', 'Santo Spirito', 'San Frediano']
+			};
+
+			const ulkeSelect = $('#ulkeSelect');
+			const sehirSelect = $('#sehirSelect');
+			const ilceSelect = $('#ilceSelect');
+
+			ulkeSelect.on('change', function() {
+				const selectedUlke = $(this).val();
+				sehirSelect.empty();
+				ilceSelect.empty().prop('disabled', true)
+					.html('<option value="">Önce şehir seçiniz</option>');
+
+				if (selectedUlke && sehirler[selectedUlke]) {
+					sehirSelect.prop('disabled', false);
+
+					const options = ['<option value="">Şehir seçiniz</option>'];
+					sehirler[selectedUlke].forEach(sehir => {
+						options.push(`<option value="${sehir}">${sehir}</option>`);
+					});
+
+					sehirSelect.html(options.join(''));
+				} else {
+					sehirSelect.prop('disabled', true)
+						.html('<option value="">Önce ülke seçiniz</option>');
+				}
+			});
+
+			sehirSelect.on('change', function() {
+				const selectedSehir = $(this).val();
+				ilceSelect.empty();
+
+				if (selectedSehir && ilceler[selectedSehir]) {
+					ilceSelect.prop('disabled', false);
+
+					const options = ['<option value="">İlçe seçiniz</option>'];
+					ilceler[selectedSehir].forEach(ilce => {
+						options.push(`<option value="${ilce}">${ilce}</option>`);
+					});
+
+					ilceSelect.html(options.join(''));
+				} else {
+					ilceSelect.prop('disabled', true)
+						.html('<option value="">Önce şehir seçiniz</option>');
+				}
+			});
+
+			// Sayfa yüklendiğinde ilk eğitim formunu ekle
+			addEducationForm();
+
+			// Mevcut form alanlarındaki DevamEdiyor durumlarını uygula
+			function updateAllDevamEdiyorStates() {
+				$('.devam-ediyor').each(function() {
+					var dateInput = $(this).closest('.education-form').find('.mezuniyet-tarihi');
+					dateInput.prop('disabled', $(this).is(':checked'));
+					if ($(this).is(':checked')) {
+						dateInput.val('');
+					}
+				});
+			}
+
+			// Sayfa yüklendiğinde tüm alanları güncelle
+			updateAllDevamEdiyorStates();
+
+			// Eğitim Ekle butonuna tıklandığında
+			$('#addEducation').click(function() {
+				addEducationForm();
+				updateAllDevamEdiyorStates();
+			});
+
+			// Eğitim formunu kaldırma
+			$(document).on('click', '.remove-education', function() {
+				$(this).closest('.education-form').remove();
+			});
+
+			// Devam ediyor işaretlendiğinde mezuniyet tarihini disable etme
+			$(document).on('change', '.devam-ediyor', function() {
+				const $this = $(this);
+				const dateInput = $this.closest('.education-form').find('.mezuniyet-tarihi');
+				const isChecked = $this.is(':checked');
+				const hiddenInput = $this.closest('.form-check').find('input[type="hidden"]');
+				
+				// Mezuniyet tarihini devre dışı bırak ve temizle
+				dateInput.prop('disabled', isChecked);
+				if (isChecked) {
+					dateInput.val('');
+				}
+				
+				// Hidden inputu güncelle - sadece geliştirici olarak bilgi amaçlı
+				// Asıl değer form gönderiminde JavaScript tarafından ayarlanıyor
+				hiddenInput.val(isChecked ? "true" : "false");
+				console.log("DevamEdiyor değişti:", isChecked, "Hidden input value:", hiddenInput.val());
+			});
+		});
+
+		// Eğitim formu ekleme fonksiyonu
+		function addEducationForm() {
+			var count = $('.education-form').length;
+			var template = `
+			<div class="education-form mb-3 border-bottom pb-3">
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Okul Adı</label>
+						<input name="Egitimler[${count}].OkulAdi" class="form-control" required />
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Bölüm</label>
+						<input name="Egitimler[${count}].Bolum" class="form-control" required />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Mezuniyet Tarihi</label>
+						<input name="Egitimler[${count}].MezuniyetTarihi" class="form-control mezuniyet-tarihi" type="date" />
+					</div>
+					<div class="col-md-6 mb-3">
+						<div class="form-check mt-4">
+							<input name="Egitimler[${count}].DevamEdiyor" class="form-check-input devam-ediyor" type="checkbox" id="devamEdiyor_${count}" />
+							<input name="Egitimler[${count}].DevamEdiyor" type="hidden" id="devamEdiyorHidden_${count}" value="false" />
+							<label class="form-check-label" for="devamEdiyor_${count}">Devam Ediyor</label>
+						</div>
+					</div>
+				</div>
+				${count > 0 ? `
+				<div class="text-end">
+					<button type="button" class="btn btn-sm btn-danger remove-education">
+						<i class="bi bi-trash"></i> Kaldır
+					</button>
+				</div>` : ''}
+			</div>`;
+
+			$('#educationContainer').append(template);
+		}
+	</script>
 }
 
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
