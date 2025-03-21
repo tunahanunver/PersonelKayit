@@ -196,7 +196,7 @@
 	<script>
 		$(document).ready(function() {
             // Seçilen dosyaları tutacak dizi
-            let selectedFiles = [];
+            const selectedFiles = [];
             
 			// Resim önizleme işlemi
 			$('#imageInput').on('change', function() {
@@ -207,18 +207,25 @@
 				if (files && files.length > 0) {
 					for (let i = 0; i < files.length; i++) {
 						const file = files[i];
-                        selectedFiles.push(file);
                         
+                        // Sadece resim dosyalarını kabul et
+                        if (!file.type.match('image.*')) {
+                            console.warn("Sadece resim dosyaları yüklenebilir: ", file.name);
+                            continue;
+                        }
+                        
+                        selectedFiles.push(file);
+                        const currentIndex = selectedFiles.length - 1;
 						const reader = new FileReader();
 
 						reader.onload = function(e) {
 							const previewHtml = `
-								<div class="col-md-3 mb-2 image-preview" data-index="${selectedFiles.length - 1}">
+								<div class="col-md-3 mb-2 image-preview" data-index="${currentIndex}">
 									<div class="card">
 										<img src="${e.target.result}" class="card-img-top" alt="Önizleme">
 										<div class="card-body p-2">
 											<small class="text-muted">${file.name}</small>
-											<button type="button" class="btn btn-sm btn-danger remove-image" data-index="${selectedFiles.length - 1}">
+											<button type="button" class="btn btn-sm btn-danger remove-image" data-index="${currentIndex}">
 												<i class="bi bi-trash"></i>
 											</button>
 										</div>
@@ -227,32 +234,42 @@
 							`;
 							previewContainer.append(previewHtml);
 						}
+                        
+                        reader.onerror = function(error) {
+                            console.error("Resim dosyası okunamadı: ", error);
+                        };
 
 						reader.readAsDataURL(file);
 					}
+                    
+                    console.log("Yeni resimler eklendi. Toplam resim sayısı:", selectedFiles.length);
 				}
-                
-                // Dosya girişini sıfırla, böylece aynı dosya tekrar seçilebilir
-                this.value = '';
+
+				// Dosya girişini sıfırla, böylece aynı dosya tekrar seçilebilir
+				this.value = '';
 			});
 
 			// Resim silme işlemi
 			$(document).on('click', '.remove-image', function() {
 				const index = $(this).data('index');
-                selectedFiles.splice(index, 1);
-				$(this).closest('.image-preview').remove();
-                
-                // Kalan resimlerin indekslerini güncelle
-                $('.image-preview').each(function(i) {
-                    $(this).attr('data-index', i);
-                    $(this).find('.remove-image').attr('data-index', i);
-                });
+                if (selectedFiles[index]) {
+                    selectedFiles.splice(index, 1);  // Diziden kaldır
+                    $(this).closest('.image-preview').remove();  // HTML'den kaldır
+                    
+                    // Kalan resimlerin indekslerini güncelle
+                    $('.image-preview').each(function(i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('.remove-image').attr('data-index', i);
+                    });
+                    
+                    console.log('Resim silindi. Kalan resim sayısı:', selectedFiles.length);
+                }
 			});
             
-            // Form gönderilmeden önce seçilen dosyaları FormData'ya ekle
+            // Form gönderilmeden önce kontrol
             $('form').on('submit', function(e) {
                 e.preventDefault();
-                
+
                 // Eğitim formlarını temizle - boş olanları kaldır
                 $('.education-form').each(function() {
                     const okulAdi = $(this).find('input[name$="OkulAdi"]').val();
@@ -287,6 +304,17 @@
                         formData.delete(`Egitimler[${index}].MezuniyetTarihi`);
                     }
                 });
+
+                // Resim ekleme kodu - bu kısmı ekliyoruz
+                if (selectedFiles && selectedFiles.length > 0) {
+                    formData.delete('Images'); // Önce mevcut Images alanlarını temizle
+                    
+                    selectedFiles.forEach(file => {
+                        formData.append('Images', file); // Resimleri FormData'ya ekle
+                    });
+                    
+                    console.log(`${selectedFiles.length} adet resim dosyası eklendi`);
+                }
 
                 // Form verilerini sıralı şekilde konsola yazdır (debug için)
                 console.log("--------- FORM VERİLERİ GÖNDERME BAŞLIYOR ---------");

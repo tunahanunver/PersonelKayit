@@ -5,6 +5,7 @@ namespace PersonelKayit.Models
     public class MedyaKutuphanesi
     {
         [Key]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Medya adı zorunludur")]

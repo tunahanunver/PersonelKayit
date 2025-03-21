@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using NuGet.Packaging.Core;
-using Orleans.Runtime;
 using PersonelKayit.Models;
 
 namespace PersonelKayit.Controllers

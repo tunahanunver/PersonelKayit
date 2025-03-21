@@ -6,6 +6,7 @@ namespace PersonelKayit.Models
     public class PersonelMedya
     {
         [Key]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Personel ID zorunludur")]

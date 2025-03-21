@@ -29,7 +29,7 @@
             <div class="card-body text-center">
                 <i class="bi bi-geo-alt-fill text-primary" style="font-size: 3rem;"></i>
                 <h5 class="card-title mt-3">Lokasyon Yönetimi</h5>
-                <p class="card-text">Ülke, şehir ve ilçe bilgilerini görüntüleyip yönetebilirsiniz.</p>
+                <p class="card-text">Ülke, şehir ve ilçe bilgilerini görüntüleyebilirsiniz.</p>
                 <a asp-controller="Lokasyon" asp-action="Index" class="btn btn-primary">
                     <i class="bi bi-arrow-right"></i> Lokasyonları Görüntüle
                 </a>
@@ -40,11 +40,17 @@
     <div class="col-md-6 mb-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
-                <i class="bi bi-file-person text-primary" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Personel Media</h5>
-                <p class="card-text">Personel media bilgilerini görüntüleyip yönetebilirsiniz.</p>
-                <a asp-controller="PersonelMedya" asp-action="Index" class="btn btn-primary">
-                    <i class="bi bi-arrow-right"></i> Personel Media
+                <div class="d-flex justify-content-center mb-3">
+                    <i class="bi bi-file-person text-primary me-3" style="font-size: 3rem;"></i>
+                    <i class="bi bi-collection-fill text-secondary" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="card-title mt-3">Personel Medya & Medya Kütüphanesi</h5>
+                <p class="card-text">Personel medya ve medya kütüphanesi bilgilerini görüntüleyebilirsiniz.</p>
+                <a asp-controller="PersonelMedya" asp-action="Index" class="btn btn-primary me-2">
+                    <i class="bi bi-arrow-right"></i> Personel Medya
+                </a>
+                <a asp-controller="Mk" asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-right"></i> Medya Kütüphanesi
                 </a>
             </div>
         </div>
@@ -53,11 +59,11 @@
     <div class="col-md-6 mb-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
-                <i class="bi bi-collection-fill text-primary" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Media Kütüphanesi</h5>
-                <p class="card-text">Media kütüphanesi bilgilerini görüntüleyip yönetebilirsiniz.</p>
-                <a asp-controller="Mk" asp-action="Index" class="btn btn-primary">
-                    <i class="bi bi-arrow-right"></i> Media Kütüphanesi
+                <i class="bi bi-mortarboard-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Personel Eğitim</h5>
+                <p class="card-text">Personel eğitim bilgilerini görüntüleyebilirsiniz.</p>
+                <a asp-controller="PersonelEgitim" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> Personel Eğitim
                 </a>
             </div>
         </div>

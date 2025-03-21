@@ -9,12 +9,14 @@ namespace PersonelKayit.Models
     public class Lokasyon
     {
         [Key]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Lokasyon adı zorunludur.")]
         [Display(Name = "Lokasyon Adı")]
         public string Name { get; set; }
 
+        [Display(Name = "Üst ID")]
         public int ParentId { get; set; }
 
         // Lokasyon hakkında ek bilgiler

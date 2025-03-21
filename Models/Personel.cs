@@ -51,6 +51,7 @@ namespace PersonelKayit.Models
         public string? Ilce => Lokasyon?.Name;
 
         //[Required(ErrorMessage = "Resim alanı zorunludur")]
+        [NotMapped]
         [Display(Name = "Resim")]
         public string? Image {  get; set; }
 
